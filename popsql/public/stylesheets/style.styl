@@ -1,7 +1,86 @@
-body 
-  padding: 50px
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif
+body
+	margin: 0
+	padding: 0
 
+body 
+	background: #3dbcd4
+	font: 14px "Lucida Grande", Helvetica, Arial, sans-serif
+
+h1
+	color: red
 
 a 
-  color: #00B7FF
+	color: #00B7FF
+
+*, *:after, *:before
+	-webkit-box-sizing: border-box
+	-moz-box-sizing: border-box
+	box-sizing: border-box
+
+.header
+	display: block
+	width: 100%
+
+bRadius(val, target)
+	if target == 'top'
+		border-top-left-radius: val
+		border-top-right-radius: val
+		-moz-border-top-left-radius: val
+		-moz-border-top-right-radius: val
+	else if target == 'bottom'
+		border-bottom-left-radius: val
+		border-bottom-right-radius: val
+		-moz-border-bottom-left-radius: val
+		-moz-border-bottom-right-radius: val
+	else
+		border-radius: val
+		-moz-border-radius: val
+
+#home-header
+	position: absolute
+	display: block
+	width: 100%
+	height: 100%
+
+	.main-header
+		display: block
+		margin-left: auto
+		margin-right: auto
+		width: 960px
+
+		.header
+			height: 60px
+
+		h1
+			color: #fff
+			font-size: 40px
+			font-weight: 600
+
+		.left
+		.right
+			display: inline-block
+			padding: 10px
+			width: 50%
+
+	.main-body
+		display: block
+		margin-left: auto
+		margin-right: auto
+		width: 1000px
+		background: #fff
+		bRadius(10px, top)
+
+
+		.header
+			padding: 10px 20px
+
+		.col
+			display: inline-block
+			padding: 0 20px
+			width: (100%/4)
+			vertical-align: top
+
+		h1
+			color: #333
+			font-size: 20px
+			font-weight: 600
