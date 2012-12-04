@@ -4,7 +4,7 @@ body
 
 body 
 	background: #3dbcd4
-	font: 14px "Lucida Grande", Helvetica, Arial, sans-serif
+	font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif
 
 h1
 	color: red
@@ -44,14 +44,17 @@ bRadius(val, target)
 
 	.main-header
 		display: block
+		margin-top: 20px
 		margin-left: auto
 		margin-right: auto
 		width: 960px
 
 		.header
-			height: 60px
+			height: 100px
 
 		h1
+			display: inline-block
+			vertical-align: top
 			color: #fff
 			font-size: 40px
 			font-weight: 600
@@ -60,14 +63,19 @@ bRadius(val, target)
 		.right
 			display: inline-block
 			padding: 10px
-			width: 50%
+			vertical-align: top
+
+		.left
+			width 55%
+		.right
+			width 45%
 
 	.main-body
 		display: block
 		margin-left: auto
 		margin-right: auto
 		width: 1000px
-		background: #fff
+		background: #f0f0f0
 		bRadius(10px, top)
 
 
@@ -79,6 +87,12 @@ bRadius(val, target)
 			padding: 0 20px
 			width: (100%/4)
 			vertical-align: top
+
+			.sprite
+				display: block
+				background: #000
+				width: 100%
+				height: 200px
 
 		h1
 			color: #333

@@ -1,15 +1,18 @@
 body{margin:0;padding:0}
-body{background:#3dbcd4;font:14px "Lucida Grande",Helvetica,Arial,sans-serif}
+body{background:#3dbcd4;font:14px "Helvetica Neue",Helvetica,Arial,sans-serif}
 h1{color:#f00}
 a{color:#00b7ff}
 *,*:after,*:before{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}
 .header{display:block;width:100%}
 #home-header{position:absolute;display:block;width:100%;height:100%;}
-#home-header .main-header{display:block;margin-left:auto;margin-right:auto;width:960px;}
-#home-header .main-header .header{height:60px}
-#home-header .main-header h1{color:#fff;font-size:40px;font-weight:600}
-#home-header .main-header .left,#home-header .main-header .right{display:inline-block;padding:10px;width:50%}
-#home-header .main-body{display:block;margin-left:auto;margin-right:auto;width:1000px;background:#fff;border-top-left-radius:10px;border-top-right-radius:10px;-moz-border-top-left-radius:10px;-moz-border-top-right-radius:10px;}
+#home-header .main-header{display:block;margin-top:20px;margin-left:auto;margin-right:auto;width:960px;}
+#home-header .main-header .header{height:100px}
+#home-header .main-header h1{display:inline-block;vertical-align:top;color:#fff;font-size:40px;font-weight:600}
+#home-header .main-header .left,#home-header .main-header .right{display:inline-block;padding:10px;vertical-align:top}
+#home-header .main-header .left{width:55%}
+#home-header .main-header .right{width:45%}
+#home-header .main-body{display:block;margin-left:auto;margin-right:auto;width:1000px;background:#f0f0f0;border-top-left-radius:10px;border-top-right-radius:10px;-moz-border-top-left-radius:10px;-moz-border-top-right-radius:10px;}
 #home-header .main-body .header{padding:10px 20px}
-#home-header .main-body .col{display:inline-block;padding:0 20px;width:25%;vertical-align:top}
+#home-header .main-body .col{display:inline-block;padding:0 20px;width:25%;vertical-align:top;}
+#home-header .main-body .col .sprite{display:block;background:#000;width:100%;height:200px}
 #home-header .main-body h1{color:#333;font-size:20px;font-weight:600}

@@ -3,8 +3,11 @@ extends layout
 block content
 	div#home-header
 		div.main-header
-			div.header maybe a logo goes here.
-			div.left maybe an image goes here.
+			div.header 
+				img(src='/images/popsql_logo.png')
+				h1 #{title}
+			div.left
+				img(src='/images/cover001.png')
 			div.right
 				h1 Melting Chat, Search and Commands For The Masses.
 				p #{title} is a concept framework that allows social chat, search and terminal all through a single command line interface. It's only a concept right now, but take a look and support us if you think it's a cool idea.
@@ -12,13 +15,21 @@ block content
 			div.header
 				h1 What is #{title}?
 			
-			div.col 
+			div.col
+				div.sprite
+					img(src='/images/col1.png')
 				p #{title} is a middleware framework for chat, allowing the melting of chat, search and commands through a simple command line interface.
 			div.col 
+				div.sprite
+						img(src='/images/col1.png')
 				p Users can search for information by asking questions to the middleware host. The host will reply answers or search results into the normal chat thread.
 			div.col 
+				div.sprite
+						img(src='/images/col1.png')
 				p Users can append queries into their normal chat. The query returns a natural answer string and appends it into the user's post as intended.
 			div.col 
+				div.sprite
+						img(src='/images/col1.png')
 				p Users can also execute terminal style commands, to interact with their data and services.
 
 			div.header
