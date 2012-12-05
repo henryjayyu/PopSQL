@@ -9,30 +9,61 @@ block content
 			div.left
 				img(src='/images/cover001.png')
 			div.right
-				h1 Melting Chat, Search and Commands For The Masses.
-				p #{title} is a concept framework that allows social chat, search and terminal all through a single command line interface. It's only a concept right now, but take a look and support us if you think it's a cool idea.
+				h2 Melting Chat, Search and Commands For Social.
+				p #{title} is an open-source chat platform, that allows users to chat, search and execute commands from a simple command line interface. Users can easily connect to their data streams to access, create and share up-to-the-minute content on the fly. 
 		div.main-body
-			div.header
+			div.header(style='border-top: none')
 				h1 What is #{title}?
 			
-			div.col
-				div.sprite
-					img(src='/images/col1.png')
-				p #{title} is a middleware framework for chat, allowing the melting of chat, search and commands through a simple command line interface.
-			div.col 
-				div.sprite
-					img(src='/images/col2.png')
-				p Users can search for information by asking questions to the middleware host. The host will reply answers or search results into the normal chat thread.
-			div.col 
-				div.sprite
-					img(src='/images/col3.png')
-				p Users can append queries into their normal chat. The query returns a natural answer string and appends it into the user's post as intended.
-			div.col 
-				div.sprite
-					img(src='/images/col4.png')
-				p Users can also execute terminal style commands, to interact with their data streams and services.
+			div._4cols
+				div.col
+					div.sprite
+						img(src='/images/col1.png')
+					h2 Enhanced Chat
+					p #{title} is an open-source platform for chat, melting together chat, search and commands through a simple command line interface.
+				div.col 
+					div.sprite
+						img(src='/images/col2.png')
+					h2 Search
+					p Users can search for information or query their data streams by asking questions to middleware hosts. The hosts reply inside the normal chat thread.
+				div.col 
+					div.sprite
+						img(src='/images/col3.png')
+					h2 Append Search
+					p Users can append searches into their normal chat. The answer is appended into the user's post as intended.
+				div.col 
+					div.sprite
+						img(src='/images/col4.png')
+					h2 Command
+					p Users can also execute terminal style commands, to interact with their data streams and services.
 
 			div.header
+				h1 Give it a try...
+
+			div._2cols
+				div.col 
+					p Use the text box to post a comment, search, or maybe run a command.
+					center
+						form(method='post', action='/')
+							textarea(name='user_post', rows='2', cols='50')
+							input(type='submit', value='submit', action='postback')
+				div.col hello
+	
+	div#home-footer
+		div.wrapper
+			div.col
+				h1 About Us
+			div.col
+				h1 Connect With Us
+			div.col
+				h1 Contact Us
+			div.col
+				h1 Legal
+		div.wrapper
+			center 
+				h2 Copyright &copy; 2012-#{+new Date().getFullYear()} All Rights Reserved. Popsql Inc.
+
+//			div.header
 				h1 What #{title} is not!
 
 			div.col 
@@ -43,4 +74,4 @@ block content
 				p .
 			div.col 
 				p .
-			
+//

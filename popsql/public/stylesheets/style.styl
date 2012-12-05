@@ -1,69 +1,82 @@
-body
+body, h1, h2, p
 	margin: 0
 	padding: 0
+	vertical-align baseline
 
 body 
-	background: #3dbcd4
-	font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif
+	background #3dbcd4
+	font 14px "proxima-nova-soft", Helvetica, Arial, sans-serif
 
-h1
-	color: red
-
+h1, h2
+	font-family "proxima-nova-alt-ext-cond"
+	font-weight 800
 a 
-	color: #00B7FF
+	color #00B7FF
 
 *, *:after, *:before
-	-webkit-box-sizing: border-box
-	-moz-box-sizing: border-box
-	box-sizing: border-box
+	-webkit-box-sizing border-box
+	-moz-box-sizing border-box
+	box-sizing border-box
 
 .header
-	display: block
-	width: 100%
+	display block
+	width 100%
 
 bRadius(val, target)
 	if target == 'top'
-		border-top-left-radius: val
-		border-top-right-radius: val
-		-moz-border-top-left-radius: val
-		-moz-border-top-right-radius: val
+		border-top-left-radius val
+		border-top-right-radius val
+		-moz-border-top-left-radius val
+		-moz-border-top-right-radius val
 	else if target == 'bottom'
-		border-bottom-left-radius: val
-		border-bottom-right-radius: val
-		-moz-border-bottom-left-radius: val
-		-moz-border-bottom-right-radius: val
+		border-bottom-left-radius val
+		border-bottom-right-radius val
+		-moz-border-bottom-left-radius val
+		-moz-border-bottom-right-radius val
 	else
-		border-radius: val
-		-moz-border-radius: val
+		border-radius val
+		-moz-border-radius val
+
+box-shadow()
+	box-shadow arguments
+	-webkit-box-shadow arguments
+	-moz-box-shadow arguments
 
 #home-header
-	position: absolute
-	display: block
-	width: 100%
-	height: 100%
+	display block
+	width 100%
+	height 100%
 
 	.main-header
-		display: block
-		margin-top: 20px
-		margin-left: auto
-		margin-right: auto
-		width: 960px
+		display block
+		margin-top 20px
+		margin-left auto
+		margin-right auto
+		width 960px
 
 		.header
-			height: 100px
+			height 100px
 
 		h1
-			display: inline-block
-			vertical-align: top
-			color: #fff
-			font-size: 40px
-			font-weight: 600
+			display inline-block
+			color #fff
+			vertical-align top
+			font-family "lobster" 
+			font-size 50px
+			font-weight 400
+
+		h2
+			display block
+			padding-bottom 20px
+			color #fff
+			font-size 40px
+			font-weight 800
 
 		.left
 		.right
-			display: inline-block
-			padding: 10px
-			vertical-align: top
+			display inline-block
+			padding 10px 10px 0 10px
+			vertical-align top
 
 		.left
 			width 55%
@@ -71,30 +84,87 @@ bRadius(val, target)
 			width 45%
 
 	.main-body
-		display: block
-		margin-left: auto
-		margin-right: auto
-		width: 1000px
-		background: #f0f0f0
+		display block
+		margin-top 40px
+		margin-left auto
+		margin-right auto
+		width 1000px
+		background #f0f0f0
 		bRadius(10px, top)
-
+		box-shadow 0 0 5px rgba(0, 0, 0, 0.25), inset 0 0 5px 1px rgba(255, 255, 255, 1)
 
 		.header
-			padding: 10px 20px
+			padding 10px 40px
+			border-top 1px solid rgba(255, 255, 255, 0.75)
+
+		._4cols
+			display block
+			padding 0 20px 40px 20px
+			border-bottom 1px solid rgba(0, 0, 0, 0.1)
+
+			.col
+				display inline-block
+				padding 0 20px
+				width (100%/4)
+				vertical-align top
+
+				.sprite
+					display block
+					background #000
+					width 100%
+					height 191px
+					border-bottom 1px solid #fff
+		._2cols
+			display block
+			padding 0 20px 40px 20px
+
+			.col
+				display inline-block
+				padding 0 20px
+				width (100%/2)
+				vertical-align top
+		
+		h1, h2
+			color #333
+		h1
+			padding 10px 0
+			font-size 30px
+		h2
+			padding 20px 0
+			font-size 20px
+		p
+			color #777
+
+#home-footer
+	display block
+	width 100%
+	height 100%
+	background #000
+	border-top 2px solid rgba(255, 255, 255, 0.25)
+
+	.wrapper
+		display block
+		margin-left auto
+		margin-right auto
+		padding 20px 20px 40px 20px
+		width 1000px
 
 		.col
-			display: inline-block
-			padding: 0 20px
-			width: (100%/4)
-			vertical-align: top
+			display inline-block
+			padding 0 20px
+			width (100%/4)
+			vertical-align top
 
-			.sprite
-				display: block
-				background: #000
-				width: 100%
-				height: 200px
-
+		h1, h2
+			font-family "proxima-nova-soft"
+			color #fff
+			font-weight 400
+		
 		h1
-			color: #333
-			font-size: 20px
-			font-weight: 600
+			font-size 13px
+
+		h2
+			font-size 12px
+			color #888
+
+

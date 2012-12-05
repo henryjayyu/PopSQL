@@ -4,5 +4,5 @@
  */
 
 exports.index = function(req, res){
-  res.render('index', { title: 'PopSQL' });
+  res.render('index', { title: 'Popsql' });
 };
