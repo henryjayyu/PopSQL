@@ -4,8 +4,9 @@
  */
 
 exports.index_postback = function(req, res){
-	var new_post = req.body.user_post;
-	res.render('index', {title: 'Popsql', new_post: new_post});
+	var postID = 1;
+	var post_content = req.body.post_content;
+	res.render('index', {title: 'Popsql', postID: postID, post_content: post_content});
 };
 
 exports.index = function(req, res){

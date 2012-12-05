@@ -45,42 +45,15 @@ block content
 					p Use the text box to post a comment, search, or maybe run a command.
 					center
 						form(method='post', action='/')
-							textarea(name='user_post', rows='2', cols='50')
-							input(type='submit', value='submit', action='postback')
+							textarea(name='post_content', rows='2', cols='50')
+							input(type='hidden', name='action', value='postback')
+							input(type='submit', value='submit')
+				
 				div.col(style='background: #fff')
-					div.post
-						if (typeof(new_post) != 'undefined')
+					if (typeof(post_content) != 'undefined')
+						div.post(data-postID= postID)
 							div.sprite
 							div.body
 								h1 Guest &nbsp;
 								h2 @guest
-								p #{new_post}
-							
-							
-	
-	div#home-footer
-		div.wrapper
-			div.col
-				h1 About Us
-			div.col
-				h1 Connect With Us
-			div.col
-				h1 Contact Us
-			div.col
-				h1 Legal
-		div.wrapper
-			center 
-				h2 Copyright &copy; 2012-#{+new Date().getFullYear()} All Rights Reserved. Popsql Inc.
-
-//			div.header
-				h1 What #{title} is not!
-
-			div.col 
-				p #{title} is not a traditional search engine. It's purpose is to fetch results that fit into the natural flow of a chat interface. This is an important note, because the power of #{title} is the ability to interface with data casually.  
-			div.col 
-				p #{title} is not a new query language. It's a javascript framework that translates and fascilitates between natural text based conversations and queries. By using a finite environment like chat and including additional finite parameters (ie. 140 character limit), we can pattern match tokens, vocabulary and argument structure with a higher level of accuracy. 
-			div.col 
-				p .
-			div.col 
-				p .
-//
+								p #{post_content}
