@@ -47,10 +47,14 @@ block content
 						form(method='post', action='/')
 							textarea(name='user_post', rows='2', cols='50')
 							input(type='submit', value='submit', action='postback')
-				div.col
+				div.col(style='background: #fff')
 					div.post
 						if (typeof(new_post) != 'undefined')
-							p #{new_post}
+							div.sprite
+							div.body
+								h1 Guest &nbsp;
+								h2 @guest
+								p #{new_post}
 							
 							
 	

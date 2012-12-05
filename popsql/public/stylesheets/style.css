@@ -18,7 +18,13 @@ a{color:#00b7ff}
 #home-header .main-body ._4cols .col{display:inline-block;padding:0 20px;width:25%;vertical-align:top;}
 #home-header .main-body ._4cols .col .sprite{display:block;background:#000;width:100%;height:191px;border-bottom:1px solid #fff}
 #home-header .main-body ._2cols{display:block;padding:0 20px 40px 20px;}
-#home-header .main-body ._2cols .col{display:inline-block;padding:0 20px;width:50%;vertical-align:top}
+#home-header .main-body ._2cols .col{display:inline-block;padding:0 20px;width:50%;vertical-align:top;}
+#home-header .main-body ._2cols .col .post{display:block;padding:5px;width:100%;}
+#home-header .main-body ._2cols .col .post .sprite{display:inline-block;background:#000;width:64px;height:64px;border-radius:5px;-moz-border-radius:5px}
+#home-header .main-body ._2cols .col .post .body{display:inline-block;vertical-align:top;padding:0 10px;width:80%;}
+#home-header .main-body ._2cols .col .post .body h1,#home-header .main-body ._2cols .col .post .body h2{padding:0;display:inline-block;font-family:"proxima-nova-soft"}
+#home-header .main-body ._2cols .col .post .body h1{font-size:18px;font-weight:600}
+#home-header .main-body ._2cols .col .post .body h2{font-size:13px;font-weight:400;color:#777}
 #home-header .main-body h1,#home-header .main-body h2{color:#333}
 #home-header .main-body h1{padding:10px 0;font-size:30px}
 #home-header .main-body h2{padding:20px 0;font-size:20px}
