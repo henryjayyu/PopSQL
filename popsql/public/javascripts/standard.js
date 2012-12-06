@@ -6,7 +6,49 @@ function getBaseURL() {
 
 $(document).ready(function() {
 
-	//say hello
-	alert('Hello World');
+	cLimit('#cmdLine_parent', 'textarea[name=post_content]', 'span[data-name=popbox_label]', '#popbox_submit', 140);
 
+	//hotkeys (currently only adds character to end)
+	$('#cmdLine_parent').on('click', '.hotkey',
+		function() {
+			var val = $('textarea[name=post_content]').attr('value');
+			var token = $(this).attr('value');
+			$('textarea[name=post_content]').attr('value', val + token).focus();
+		});
+
+	//cmdLine Post
+	$('#cmdLine_parent').on('submit', '#cmdLine',
+		function() {
+
+			//AJAX
+			var options = {
+				url: '/',
+				success: function(data) {
+					$('textarea[name=post_content]').attr('value','');
+					$('#feed').prepend(data);
+					$('.post').fadeIn();
+				},
+			};
+
+			$(this).ajaxSubmit(options);
+			return false;
+		});
+
+	//character limit
+	function cLimit(parent, input, label, action, limit) {
+		$(parent).on('keyup', input, 
+			function() {
+				var allowance = (limit - $(input).val().length);
+				//manage label and submit
+				if(allowance <= 0) {
+					$(label).attr('style', 'color: red');
+					$(action).attr('disabled', 'disabled');
+				}
+				else {
+					$(label).removeAttr('style');
+					$(action).removeAttr('disabled');
+				}
+				$(label).html(allowance);
+			});
+	}
 });

@@ -3,6 +3,9 @@ body{background:#3dbcd4;font:14px "proxima-nova-soft",Helvetica,Arial,sans-serif
 h1,h2{font-family:"proxima-nova-alt-ext-cond";font-weight:800}
 a{color:#00b7ff}
 *,*:after,*:before{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}
+.button,.submit{padding:5px 10px;min-width:40px;border:none;font-family:'proxima-nova-soft';font-size:18px;border-radius:5px;-moz-border-radius:5px}
+.hotkey{margin-right:5px;background:#ccc;color:#fff}
+.submit{margin-left:10px;background:#3dbcd4;color:#fff;box-shadow:inset 0 0 2px #fff,inset 0 0 0 1px rgba(0,0,0,0.5);-webkit-box-shadow:inset 0 0 2px #fff,inset 0 0 0 1px rgba(0,0,0,0.5);-moz-box-shadow:inset 0 0 2px #fff,inset 0 0 0 1px rgba(0,0,0,0.5);text-shadow:0 1px 1px rgba(0,0,0,0.4)}
 .header{display:block;width:100%}
 #home-header{display:block;width:100%;height:100%;}
 #home-header .main-header{display:block;margin-top:20px;margin-left:auto;margin-right:auto;width:960px;}
@@ -18,17 +21,25 @@ a{color:#00b7ff}
 #home-header .main-body ._4cols .col{display:inline-block;padding:0 20px;width:25%;vertical-align:top;}
 #home-header .main-body ._4cols .col .sprite{display:block;background:#000;width:100%;height:191px;border-bottom:1px solid #fff}
 #home-header .main-body ._2cols{display:block;padding:0 20px 40px 20px;}
-#home-header .main-body ._2cols .col{display:inline-block;padding:0 20px;width:50%;vertical-align:top;}
-#home-header .main-body ._2cols .col .post{display:block;padding:5px;width:100%;}
-#home-header .main-body ._2cols .col .post .sprite{display:inline-block;background:#000;width:64px;height:64px;border-radius:5px;-moz-border-radius:5px}
-#home-header .main-body ._2cols .col .post .body{display:inline-block;vertical-align:top;padding:0 10px;width:80%;}
-#home-header .main-body ._2cols .col .post .body h1,#home-header .main-body ._2cols .col .post .body h2{padding:0;display:inline-block;font-family:"proxima-nova-soft"}
-#home-header .main-body ._2cols .col .post .body h1{font-size:18px;font-weight:600}
-#home-header .main-body ._2cols .col .post .body h2{font-size:13px;font-weight:400;color:#777}
+#home-header .main-body ._2cols .col{display:inline-block;padding:0 20px;width:50%;vertical-align:top}
+#home-header .main-body ._2cols .popbox_frame{padding:5px;width:100%;background:#ddd;border-radius:4px;-moz-border-radius:4px}
+#home-header .main-body ._2cols .popbox{resize:none;border:1px solid rgba(0,0,0,0.1);padding:5px;width:100%;height:100px;font-family:'proxima-nova-soft';font-size:14px;overflow:hidden;border-radius:4px;-moz-border-radius:4px;}
+#home-header .main-body ._2cols .popbox:hover,#home-header .main-body ._2cols .popbox:focus{box-shadow:0 0 3px 1px #3dbcd4;-webkit-box-shadow:0 0 3px 1px #3dbcd4;-moz-box-shadow:0 0 3px 1px #3dbcd4}
+#home-header .main-body ._2cols .popbox_menu{padding:10px;width:100%;text-align:left;}
+#home-header .main-body ._2cols .popbox_menu .left,#home-header .main-body ._2cols .popbox_menu .right{display:inline-block}
+#home-header .main-body ._2cols .popbox_menu .left{width:60%}
+#home-header .main-body ._2cols .popbox_menu .right{width:40%;text-align:right}
 #home-header .main-body h1,#home-header .main-body h2{color:#333}
 #home-header .main-body h1{padding:10px 0;font-size:30px}
 #home-header .main-body h2{padding:20px 0;font-size:20px}
 #home-header .main-body p{color:#777}
+#feed{display:block;padding:0 10px;height:500px;background:#fff;border-radius:5px;-moz-border-radius:5px;box-shadow:0 0 5px rgba(255,255,255,0.75),0 0 0 1px rgba(0,0,0,0.1);-webkit-box-shadow:0 0 5px rgba(255,255,255,0.75),0 0 0 1px rgba(0,0,0,0.1);-moz-box-shadow:0 0 5px rgba(255,255,255,0.75),0 0 0 1px rgba(0,0,0,0.1);overflow:auto;}
+#feed .post{display:none;padding:10px 0;width:100%;border-bottom:1px solid rgba(0,0,0,0.1);}
+#feed .post .sprite{display:inline-block}
+#feed .post .body{display:inline-block;vertical-align:top;padding:0 10px;width:80%;}
+#feed .post .body h1,#feed .post .body h2{padding:0;display:inline-block;font-family:"proxima-nova-soft"}
+#feed .post .body h1{font-size:14px;font-weight:600}
+#feed .post .body h2{font-size:12px;font-weight:400;color:#777}
 #home-footer{display:block;width:100%;height:100%;background:#000;border-top:2px solid rgba(255,255,255,0.25);}
 #home-footer .wrapper{display:block;margin-left:auto;margin-right:auto;padding:20px 20px 40px 20px;width:1000px;}
 #home-footer .wrapper .col{display:inline-block;padding:0 20px;width:25%;vertical-align:top}
