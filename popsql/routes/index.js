@@ -1,19 +1,31 @@
 
 /*
- * GET home page.
+ * POST handle posts.
  */
 
-exports.index_postback = function(req, res){
-	var post_data = req.body.post_content;
-	var postID = 1;
-	var spriteID = '/images/guest.png';
-	var post_time = Date.now();
-	var post_content = req.body.post_content;
-	
-	res.render('post', {postID: postID, spriteID: spriteID, post_time: post_time, post_content: post_content});
-};
+var Post = require('../models/post.js');
+var mongoose = require('mongoose');
+
+exports.index_post = function(req, res) {
+	new Post({post: req.body.post_content}).save();
+
+	Post.findOne({post: req.body.post_content}, function(error, post) {
+		res.render('post', {postID: post.thread, spriteID: '/images/guest.png', post_time: post.date, post_content: post.post});
+    });
+}
+
+/*
+ * GET home page.
+ */
 
 exports.index = function(req, res){
 	res.render('index', { title: 'Popsql'});
 };
 
+/*
+ *	GET about us page.
+ */
+
+exports.index_aboutus = function(req, res){
+	res.render('aboutus', { title: 'About Us'});
+};

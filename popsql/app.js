@@ -1,5 +1,5 @@
 
-/**
+/*
  * Module dependencies.
  */
 
@@ -9,10 +9,23 @@ var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
   , http = require('http')
-  , path = require('path');
-
+  , path = require('path')
 
 var app = express();
+
+var mongoose = require('mongoose');
+
+mongoose.connection.on('open', function (ref) {
+  console.log('Connected to mongo server.');
+});
+
+mongoose.connection.on('error', function (err) {
+  console.log('Could not connect to mongo server!');
+  console.log(err);
+});
+
+mongoose.connect('mongodb://localhost/test');
+
 
 app.configure(function(){
   app.set('port', process.env.PORT || 3000);
@@ -37,11 +50,12 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
+// set up the RESTful, handler methods
 app.get('/', routes.index);
+app.get('/aboutus', routes.index_aboutus);
 app.get('/users', user.list);
 
-<!--Testing-->
-app.post('/', routes.index_postback);
+app.post('/', routes.index_post);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
