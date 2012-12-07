@@ -57,3 +57,9 @@ block content
 				
 				div.col
 					div#feed.feed
+						each post in posts_array
+							-var postID = post.thread
+							-var spriteID = '/images/guest.png'
+							-var post_time = post.date
+							-var post_content = post.post
+							include post

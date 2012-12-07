@@ -19,7 +19,11 @@ exports.index_post = function(req, res) {
  */
 
 exports.index = function(req, res){
-	res.render('index', { title: 'Popsql'});
+
+	Post.find(function(error, posts) {
+		res.render('index', {title: 'Popsql', posts_array: posts});
+	});
+	//res.render('index', { title: 'Popsql', posts_array: posts_array});
 };
 
 /*
