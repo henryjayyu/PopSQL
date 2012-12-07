@@ -13,7 +13,9 @@ var postSchema = new Schema({
     author: {
     	type: String, default: 'Guest'
     },
-    post: String
+    post: String,
+    tags: Array,
+    adds: Array,
 });
 
 module.exports = mongoose.model('Post', postSchema);
