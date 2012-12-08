@@ -18,6 +18,11 @@ exports.index_post = function(req, res) {
 	function isToken(value, index, array) {
 		if (value.charAt(0).match(/#/)) {
 			tags.push(value);
+
+			if (value == '#packers') {
+				tags.push('#nfl');
+			}
+
 		}
 		else if (value.charAt(0).match(/@/)) {
 			adds.push(value);
@@ -57,8 +62,10 @@ exports.index_post = function(req, res) {
  */
 
 exports.index_poll = function(req, res){
-	console.log(req.body.date);
-	res.send(false);
+	var last_poll = req.body.date;
+	Post.find({date: {$gt: last_poll}}).count().exec(function(error, new_posts) {
+		res.json(new_posts);
+	});
 };
 
 /*

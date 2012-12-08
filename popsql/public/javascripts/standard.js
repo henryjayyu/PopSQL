@@ -13,23 +13,18 @@ $(document).ready(function() {
 	cLimit('#cmdLine_parent', 'textarea[name=post_content]', 'span[data-name=popbox_label]', '#popbox_submit', 140);
 
 	//poll
-	var last_poll = Date.now();
+	var last_poll = new Date();
 	window.setInterval(
 		function() {
-			var options = {
-				url: '/poll',
-				type: 'POST',
-				data: {date: last_poll},
-				success: function(data) {
-					if(data) {
-						alert(data);
-					}
-				},
-			};
+			$.post('/poll', {
+				date: last_poll
+			}, function(data) {
+				if(data > 0) {
+					$('.new_posts').attr('value', data + " New Posts").slideDown();
+				}
+			});
 
-			$(this).ajaxSubmit(options);
-
-		}, 10000);
+		}, 20000);
 
 	//hotkeys (currently only adds character to end)
 	$('#cmdLine_parent').on('click', '.hotkey',
