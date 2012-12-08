@@ -55,6 +55,7 @@ app.get('/', routes.index);
 app.get('/aboutus', routes.index_aboutus);
 app.get('/users', user.list);
 
+app.post('/poll', routes.index_poll);
 app.post('/', routes.index_post);
 
 http.createServer(app).listen(app.get('port'), function(){

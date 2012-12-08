@@ -42,7 +42,7 @@ block content
 
 			div._2cols
 				div.col 
-					p Use the text box to post a comment, search, or maybe run a command.
+					p Use the text box to post a comment, search, or maybe even run a command. The goal right now is to collect samples and see what you want to do.  
 					center#cmdLine_parent
 						form#cmdLine.popbox_frame(method='post', action='/')
 							textarea.popbox(name='post_content', rows='2', cols='50')
@@ -60,7 +60,8 @@ block content
 						each post in posts_array
 							-var postID = post.thread
 							-var spriteID = '/images/guest.png'
-							-var post_time = post.date
+							-var iso_date = post.date
+							-var post_date = iso_date.toISOString()
 							-var post_content = post.post
 							-var tags = post.tags
 							-var adds = post.adds

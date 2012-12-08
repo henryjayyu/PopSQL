@@ -11,7 +11,10 @@ h1, h2
 	font-family "proxima-nova-alt-ext-cond"
 	font-weight 800
 a 
-	color #00B7FF
+	color #3dbcd4
+
+abbr
+	border-bottom none
 
 *, *:after, *:before
 	-webkit-box-sizing border-box
@@ -37,6 +40,9 @@ box-shadow()
 	box-shadow arguments
 	-webkit-box-shadow arguments
 	-moz-box-shadow arguments
+
+.resetDOM
+	display none
 
 .button, .submit
 	padding 5px 10px
@@ -188,6 +194,7 @@ box-shadow()
 			padding 20px 0
 			font-size 20px
 		p
+			padding 0 0 10px 0
 			color #777
 
 #feed
@@ -212,7 +219,7 @@ box-shadow()
 			display inline-block
 			vertical-align top
 			padding 0 10px
-			width 80%
+			width 85%
 
 			h1, h2, h3
 				padding 0
@@ -233,6 +240,9 @@ box-shadow()
 				span
 					display block
 					color #ccc
+			abbr
+				float right
+				color #ccc
 
 #home-footer
 	display block

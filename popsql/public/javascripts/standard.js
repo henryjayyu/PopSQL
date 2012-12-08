@@ -4,9 +4,32 @@ function getBaseURL() {
 	return location.protocol + "//" + location.hostname + (location.port && ":" + location.port) + "/";
 }
 
+
 $(document).ready(function() {
 
+	//services
+	$('abbr.timeago').timeago();
+	
 	cLimit('#cmdLine_parent', 'textarea[name=post_content]', 'span[data-name=popbox_label]', '#popbox_submit', 140);
+
+	//poll
+	var last_poll = Date.now();
+	window.setInterval(
+		function() {
+			var options = {
+				url: '/poll',
+				type: 'POST',
+				data: {date: last_poll},
+				success: function(data) {
+					if(data) {
+						alert(data);
+					}
+				},
+			};
+
+			$(this).ajaxSubmit(options);
+
+		}, 10000);
 
 	//hotkeys (currently only adds character to end)
 	$('#cmdLine_parent').on('click', '.hotkey',
@@ -27,6 +50,8 @@ $(document).ready(function() {
 					$('textarea[name=post_content]').attr('value','');
 					$('#feed').prepend(data);
 					$('.post').fadeIn();
+					//reset
+					$('abbr.timeago').timeago();
 				},
 			};
 

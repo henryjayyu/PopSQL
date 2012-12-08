@@ -16,17 +16,16 @@ exports.index_post = function(req, res) {
 	var adds = [];
 
 	function isToken(value, index, array) {
-		if (value.match(/#/)) {
+		if (value.charAt(0).match(/#/)) {
 			tags.push(value);
 		}
-		else if (value.match(/@/)) {
+		else if (value.charAt(0).match(/@/)) {
 			adds.push(value);
 		}
 	}
 
 	str_parts.forEach(isToken);
 
-	
 	//POST to mongo
 	new Post({
 		post: req.body.post_content, 
@@ -35,10 +34,16 @@ exports.index_post = function(req, res) {
 	}).save();
 		
 	Post.findOne({post: req.body.post_content}, function(error, post) {
+
+		//publish ISODate
+		function ISODate(date) {
+			return date.toISOString();
+		}
+
 		res.render('post', {
 			postID: post.thread, 
 			spriteID: '/images/guest.png', 
-			post_time: post.date, 
+			post_date: ISODate(post.date), 
 			post_content: post.post,
 			tags: post.tags,
 			adds: post.adds
@@ -46,6 +51,15 @@ exports.index_post = function(req, res) {
     });
 
 }
+
+/*
+ * GET poll.
+ */
+
+exports.index_poll = function(req, res){
+	console.log(req.body.date);
+	res.send(false);
+};
 
 /*
  * GET home page.
@@ -57,7 +71,7 @@ exports.index = function(req, res){
 		res.render('index', {
 			title: 'Popsql',
 			posts_array: posts
-		})
+		});
 	});
 
 };

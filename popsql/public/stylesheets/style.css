@@ -1,8 +1,10 @@
 body,h1,h2,p{margin:0;padding:0;vertical-align:baseline}
 body{background:#3dbcd4;font:14px "proxima-nova-soft",Helvetica,Arial,sans-serif}
 h1,h2{font-family:"proxima-nova-alt-ext-cond";font-weight:800}
-a{color:#00b7ff}
+a{color:#3dbcd4}
+abbr{border-bottom:none}
 *,*:after,*:before{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}
+.resetDOM{display:none}
 .button,.submit{padding:5px 10px;min-width:40px;border:none;font-family:'proxima-nova-soft';font-size:18px;border-radius:5px;-moz-border-radius:5px}
 .hotkey{margin-right:5px;background:#ccc;color:#fff}
 .submit{margin-left:10px;background:#3dbcd4;color:#fff;box-shadow:inset 0 0 2px #fff,inset 0 0 0 1px rgba(0,0,0,0.5);-webkit-box-shadow:inset 0 0 2px #fff,inset 0 0 0 1px rgba(0,0,0,0.5);-moz-box-shadow:inset 0 0 2px #fff,inset 0 0 0 1px rgba(0,0,0,0.5);text-shadow:0 1px 1px rgba(0,0,0,0.4)}
@@ -32,16 +34,17 @@ a{color:#00b7ff}
 #home-header .main-body h1,#home-header .main-body h2{color:#333}
 #home-header .main-body h1{padding:10px 0;font-size:30px}
 #home-header .main-body h2{padding:20px 0;font-size:20px}
-#home-header .main-body p{color:#777}
+#home-header .main-body p{padding:0 0 10px 0;color:#777}
 #feed{display:block;padding:0 10px;height:500px;background:#fff;border-radius:5px;-moz-border-radius:5px;box-shadow:0 0 5px rgba(255,255,255,0.75),0 0 0 1px rgba(0,0,0,0.1);-webkit-box-shadow:0 0 5px rgba(255,255,255,0.75),0 0 0 1px rgba(0,0,0,0.1);-moz-box-shadow:0 0 5px rgba(255,255,255,0.75),0 0 0 1px rgba(0,0,0,0.1);overflow:auto;}
 #feed .post{display:block;padding:10px 0;width:100%;border-bottom:1px solid rgba(0,0,0,0.1);}
 #feed .post .sprite{display:inline-block}
-#feed .post .body{display:inline-block;vertical-align:top;padding:0 10px;width:80%;}
+#feed .post .body{display:inline-block;vertical-align:top;padding:0 10px;width:85%;}
 #feed .post .body h1,#feed .post .body h2,#feed .post .body h3{padding:0;display:inline-block;font-family:"proxima-nova-soft"}
 #feed .post .body h1{font-size:14px;font-weight:600}
 #feed .post .body h2{font-size:12px;font-weight:400;color:#777}
 #feed .post .body h3{font-size:10px;font-weight:400;color:#777;}
 #feed .post .body h3 span{display:block;color:#ccc}
+#feed .post .body abbr{float:right;color:#ccc}
 #home-footer{display:block;width:100%;height:100%;background:#000;border-top:2px solid rgba(255,255,255,0.25);}
 #home-footer .wrapper{display:block;margin-left:auto;margin-right:auto;padding:20px 20px 40px 20px;width:1000px;}
 #home-footer .wrapper .col{display:inline-block;padding:0 20px;width:25%;vertical-align:top}
