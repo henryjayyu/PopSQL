@@ -46,6 +46,7 @@ block content
 					center#cmdLine_parent
 						form#cmdLine.popbox_frame(method='post', action='/')
 							textarea.popbox(name='post_content', rows='2', cols='50')
+							input(type='hidden', name='user_ip', value='')
 							div.popbox_menu
 								div.left
 									input.button.hotkey(type='button', value='@')
@@ -56,14 +57,7 @@ block content
 									input#popbox_submit.submit(type='submit', value='submit')
 				
 				div.col
-					div#feed.feed
+					div#feed
 						input.new_posts.button(type='button', value="1 New Post")
-						each post in posts_array
-							-var postID = post.thread
-							-var spriteID = '/images/guest.png'
-							-var iso_date = post.date
-							-var post_date = iso_date.toISOString()
-							-var post_content = post.post
-							-var tags = post.tags
-							-var adds = post.adds
+						div.feed
 							include post

@@ -10,10 +10,10 @@ var Post = require('../models/post.js');
 exports.index_post = function(req, res) {
 
 	//Gen1 Analysis
-	var str = req.body.post_content;
-	var str_parts = str.split(' ');
-	var tags = [];
-	var adds = [];
+	var str = req.body.post_content
+		,	str_parts = str.split(' ')
+		,	tags = []
+		,	adds = [];
 
 	function isToken(value, index, array) {
 		if (value.charAt(0).match(/#/)) {
@@ -33,29 +33,21 @@ exports.index_post = function(req, res) {
 
 	//POST to mongo
 	new Post({
-		post: req.body.post_content, 
-		tags: tags,
-		adds: adds
-	}).save();
-		
-	Post.findOne({post: req.body.post_content}, function(error, post) {
-
-		//publish ISODate
-		function ISODate(date) {
-			return date.toISOString();
-		}
-
+			post: req.body.post_content
+		,	user_ip: req.body.user_ip
+		, 	tags: tags
+		,	adds: adds
+		}).save();
+	
+	//POST to user feed	
+	Post.findOne({post: req.body.post_content}).exec(function(error, my_post) {
 		res.render('post', {
-			postID: post.thread, 
-			spriteID: '/images/guest.png', 
-			post_date: ISODate(post.date), 
-			post_content: post.post,
-			tags: post.tags,
-			adds: post.adds
+			posts_array: my_post
 		});
-    });
+		console.log(my_post);
+   	});
 
-}
+};
 
 /*
  * GET poll.
@@ -63,7 +55,8 @@ exports.index_post = function(req, res) {
 
 exports.index_poll = function(req, res){
 	var last_poll = req.body.date;
-	Post.find({date: {$gt: last_poll}}).count().exec(function(error, new_posts) {
+	var users_ip = req.body.user_ip;
+	Post.find({date: {$gt: last_poll}, user_ip: {$ne: users_ip}}).count().exec(function(error, new_posts) {
 		res.json(new_posts);
 	});
 };
@@ -74,7 +67,7 @@ exports.index_poll = function(req, res){
 
 exports.index = function(req, res){
 
-	Post.find().sort({date: -1}).limit(10).exec(function(error, posts) {
+	Post.find().sort('-date').limit(10).exec(function(error, posts) {
 		res.render('index', {
 			title: 'Popsql',
 			posts_array: posts

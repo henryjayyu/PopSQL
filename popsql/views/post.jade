@@ -1,17 +1,51 @@
-div.post(data-postID= postID)
-	div.sprite
-		img(src= spriteID)
-	div.body
-		h1 Guest &nbsp;
-		h2 @guest
-		abbr.timeago(title= post_date)
-		p #{post_content}
-		h3
-			if (tags[0])
-				span#tags Tags: 
-					each tag in tags
-						a #{tag}, 
-			if (adds[0])
-				span#adds Addresses: 
-					each add in adds
-						a #{add}, 
+if (posts_array[1])
+	each post in posts_array
+		- var postID = post.thread 
+		- var spriteID = '/images/guest.png'
+		- var post_date = post.date
+		- var post_date = post_date.toISOString()
+		- var post_content = post.post
+		- var tags = post.tags
+		- var adds = post.adds
+		div.post(data-postID= postID)
+			div.sprite
+				img(src= spriteID)
+			div.body
+				h1 Guest &nbsp;
+				h2 @guest
+				abbr.timeago(title= post_date)
+				p #{post_content}
+				h3
+					if (tags[0])
+						span#tags Tags: 
+							each tag in tags
+								a #{tag}, 
+					if (adds[0])
+						span#adds Addresses: 
+							each add in adds
+								a #{add}, 
+else
+	- var postID = posts_array.thread 
+	- var spriteID = '/images/guest.png'
+	- var post_date = posts_array.date
+	- var post_date = post_date.toISOString()
+	- var post_content = posts_array.post
+	- var tags = posts_array.tags
+	- var adds = posts_array.adds
+	div.post(data-postID= postID)
+		div.sprite
+			img(src= spriteID)
+		div.body
+			h1 Guest &nbsp;
+			h2 @guest
+			abbr.timeago(title= post_date)
+			p #{post_content}
+			h3
+				if (tags[0])
+					span#tags Tags: 
+						each tag in tags
+							a #{tag}, 
+				if (adds[0])
+					span#adds Addresses: 
+						each add in adds
+							a #{add}, 
