@@ -1,7 +1,7 @@
 if (posts_array[1])
 	each post in posts_array
 		- var postID = post.thread 
-		- var spriteID = '/images/guest.png'
+		- var spriteID = '/images/guest_a.png'
 		- var post_date = post.date
 		- var post_date = post_date.toISOString()
 		- var post_content = post.post
@@ -26,7 +26,7 @@ if (posts_array[1])
 								a #{add}, 
 else
 	- var postID = posts_array.thread 
-	- var spriteID = '/images/guest.png'
+	- var spriteID = '/images/guest_a.png'
 	- var post_date = posts_array.date
 	- var post_date = post_date.toISOString()
 	- var post_content = posts_array.post
