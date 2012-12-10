@@ -55,8 +55,8 @@ app.get('/', routes.index);
 app.get('/aboutus', routes.index_aboutus);
 app.get('/users', user.list);
 
-app.post('/poll', routes.index_poll);
-app.post('/', routes.index_post);
+app.post('/postback', routes.index_postback);
+app.post('/post', routes.index_post);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

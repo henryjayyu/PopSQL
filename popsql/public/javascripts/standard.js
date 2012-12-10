@@ -12,24 +12,28 @@ $(document).ready(function() {
 	
 	cLimit('#cmdLine_parent', 'textarea[name=post_content]', 'span[data-name=popbox_label]', '#popbox_submit', 140);
 
-	//get user_ip
-	var user_ip = '';
-	$.getJSON("http://jsonip.appspot.com?callback=?",
-		function(data){
-			$('input[name=user_ip]').attr('value', data.ip);
-			user_ip = data.ip;
-		});
+	//initialize posts
+	$.post('/postback', {
+			action: 'initialize'
+	}, function(data) {
+		if(data) {
+			$('.feed').prepend(data);
+			$('.feed').fadeIn();
+			//reset
+			$('abbr.timeago').timeago();
+		}
+	});
 
 	//poll
 	var last_poll = new Date();
 	window.setInterval(
 		function() {
-			$.post('/poll', {
-					date: last_poll
-				,	user_ip: user_ip
+			$.post('/postback', {
+					action: 'poll'
+				,	date: last_poll
 			}, function(data) {
-				if(data > 0) {
-					$('.new_posts').attr('value', data + " New Posts").slideDown();
+				if (data > 0) {
+					$('.new_posts').attr('value', data + " New Posts").slideDown(200);
 				}
 			});
 
@@ -43,17 +47,34 @@ $(document).ready(function() {
 			$('textarea[name=post_content]').attr('value', val + token).focus();
 		});
 
+	//update feed
+	$('#feed').on('click', '.new_posts',
+		function() {
+			$.post('/postback', {
+					action: 'update_feed'
+				,	date: last_poll 
+			}, function(data) {
+				if (data) {
+					$('.feed').prepend(data);
+					//reset
+					$('.new_posts').slideUp(200, function() {
+						last_poll = new Date();
+						$('abbr.timeago').timeago();
+					});
+				}
+			});
+		});
+
 	//cmdLine Post
 	$('#cmdLine_parent').on('submit', '#cmdLine',
 		function() {
 
 			//AJAX
 			var options = {
-				url: '/',
+				url: '/post',
 				success: function(data) {
 					$('textarea[name=post_content]').attr('value','');
 					$('.feed').prepend(data);
-					$('.feed').fadeIn();
 					//reset
 					$('abbr.timeago').timeago();
 				},
@@ -69,8 +90,11 @@ $(document).ready(function() {
 			function() {
 				var allowance = (limit - $(input).val().length);
 				//manage label and submit
-				if(allowance <= 0) {
+				if (allowance <= 0) {
 					$(label).attr('style', 'color: red');
+					$(action).attr('disabled', 'disabled');
+				}
+				else if (allowance == 140) {
 					$(action).attr('disabled', 'disabled');
 				}
 				else {

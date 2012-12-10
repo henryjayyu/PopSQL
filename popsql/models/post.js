@@ -12,6 +12,8 @@ var postSchema = new Schema({
     ,   author: { type: String
     ,   default: 'Guest' }
     ,   user_ip: String
+    ,   spriteID: { type: String
+    ,   default: '/images/guest_a.png'}
     ,   post: String
     ,   tags: Array
     ,   adds: Array

@@ -9,6 +9,8 @@ var Post = require('../models/post.js');
  */
 exports.index_post = function(req, res) {
 
+	var users_ip = req.header('x-forwarded-for') || req.connection.remoteAddress;
+
 	//Gen1 Analysis
 	var str = req.body.post_content
 		,	str_parts = str.split(' ')
@@ -34,32 +36,19 @@ exports.index_post = function(req, res) {
 	//POST to mongo
 	new Post({
 			post: req.body.post_content
-		,	user_ip: req.body.user_ip
+		,	user_ip: users_ip
 		, 	tags: tags
 		,	adds: adds
 		}).save();
 	
 	//POST to user feed	
-	Post.findOne({post: req.body.post_content}).exec(function(error, my_post) {
+	Post.find({post: req.body.post_content, user_ip: users_ip}).sort({date: -1}).limit(1).exec(function(error, my_post) {
 		res.render('post', {
 			posts_array: my_post
 		});
-		console.log(my_post);
    	});
-
 };
 
-/*
- * GET poll.
- */
-
-exports.index_poll = function(req, res){
-	var last_poll = req.body.date;
-	var users_ip = req.body.user_ip;
-	Post.find({date: {$gt: last_poll}, user_ip: {$ne: users_ip}}).count().exec(function(error, new_posts) {
-		res.json(new_posts);
-	});
-};
 
 /*
  * GET home page.
@@ -67,13 +56,56 @@ exports.index_poll = function(req, res){
 
 exports.index = function(req, res){
 
-	Post.find().sort('-date').limit(10).exec(function(error, posts) {
-		res.render('index', {
-			title: 'Popsql',
-			posts_array: posts
-		});
+	res.render('index', {
+			title: 'Popsql'
 	});
 
+};
+
+exports.index_postback = function(req, res){
+	//initialize feed
+	var action = req.body.action
+	,	users_ip = req.header('x-forwarded-for') || req.connection.remoteAddress;
+
+	if (action == 'initialize') {
+		Post.find().sort({date: -1}).limit(10).exec(function(error, posts) {
+			
+			for(i = 0; i < posts.length; i++) {
+				if (posts[i].user_ip != users_ip) {
+					posts[i].spriteID = '/images/guest_b.png';
+				}
+			}
+
+			res.render('post', {
+				posts_array: posts
+			});
+		});
+	}
+
+	else if (action == 'poll') {
+		var last_poll = req.body.date;
+		Post.find({date: {$gt: last_poll}, user_ip: {$ne: users_ip}}).count().exec(function(error, new_posts) {
+			res.json(new_posts);
+		});
+	}
+
+	else if (action == 'update_feed') {
+		var last_poll = req.body.date;
+		Post.find({date: {$gt: last_poll}, user_ip: {$ne: users_ip}}).exec(function(error, posts) {
+
+			console.log(posts);
+
+			for(i = 0; i < posts.length; i++) {
+				if (posts[i].user_ip != users_ip) {
+					posts[i].spriteID = '/images/guest_b.png';
+				}
+			}
+
+			res.render('post', {
+				posts_array: posts
+			});
+		});
+	}
 };
 
 /*
