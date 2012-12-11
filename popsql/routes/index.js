@@ -3,6 +3,7 @@ var mongoose = require('mongoose');
 
 //Global Models
 var Post = require('../models/post.js');
+var Library = require('../models/library.js');
 
 /*
  * POST handle posts.
@@ -21,10 +22,42 @@ exports.index_post = function(req, res) {
 		if (value.charAt(0).match(/#/)) {
 			tags.push(value);
 
+			new Library({
+				team: '49ers'
+			,	city: 'San Francisco'
+			,	state: 'CA'
+			,	conf: 'NFC'
+			,	league: 'NFL'
+			,	sport: 'Football'
+			,	tokens: [ 
+				'#49ers'
+			,	'#san_francisco'
+			,	'#CA'
+			,	'#nfc'
+			,	'#nfl'
+			,	'football'
+			]
+			}).save();
+
+/*
+			function isChild(value) {
+				Library.findOne( { tokens: value } ).exec(function(error, volume) {
+					console.log("debug:" + value);
+				});
+			}
+
+			if (isChild(value)) {
+				for (i = 0; i < tokens.length; i++) {
+					console.log(token[i]);
+				}
+			}
+*/
+
+/*
 			if (value == '#packers') {
 				tags.push('#nfl');
 			}
-
+*/
 		}
 		else if (value.charAt(0).match(/@/)) {
 			adds.push(value);
@@ -63,10 +96,11 @@ exports.index = function(req, res){
 };
 
 exports.index_postback = function(req, res){
-	//initialize feed
+
 	var action = req.body.action
 	,	users_ip = req.header('x-forwarded-for') || req.connection.remoteAddress;
 
+	//initialize feed
 	if (action == 'initialize') {
 		Post.find().sort({date: -1}).limit(10).exec(function(error, posts) {
 			
@@ -82,6 +116,7 @@ exports.index_postback = function(req, res){
 		});
 	}
 
+	//poll
 	else if (action == 'poll') {
 		var last_poll = req.body.date;
 		Post.find({date: {$gt: last_poll}, user_ip: {$ne: users_ip}}).count().exec(function(error, new_posts) {
@@ -89,6 +124,7 @@ exports.index_postback = function(req, res){
 		});
 	}
 
+	//update feed
 	else if (action == 'update_feed') {
 		var last_poll = req.body.date;
 		Post.find({date: {$gt: last_poll}, user_ip: {$ne: users_ip}}).exec(function(error, posts) {
