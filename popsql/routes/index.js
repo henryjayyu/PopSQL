@@ -12,49 +12,47 @@ exports.index_post = function(req, res) {
 
 	var users_ip = req.header('x-forwarded-for') || req.connection.remoteAddress;
 
-	//Split post to find tokens.
+	//Split post into words.
 	var str = req.body.post_content
 		,	str_parts = str.split(' ')
 		,	tags = []
 		,	adds = [];
 
 	//Find Tokens
-	str_parts.forEach(isToken);
-
-	function isToken(value, index, array) {
+	for (i = 0; i < str_parts.length; i++) {
+		var value = str_parts[i];
 		if (value.charAt(0).match(/#/)) {
-			tags.push(value);
-			console.log('pushed token: ' + value);
+			tags.push(value); //located tag
+			console.log('pushed tag: ' + value);
 		}
-
 		else if (value.charAt(0).match(/@/)) {
-			adds.push(value);
+			adds.push(value); //located address
+			console.log('pushed add: ' + value);
 		}
 	}
+	console.log('find tokens completed')
+	hasRoutes(tags);
 
-	if (tags.length > 0) {
-		tags.forEach(hasRoute);
-	}
-	else {
-		console.log(tags.length);
-		postReady(); //escape
-	}
 
-	function hasRoute(value, index, array) {
-		Library.findOne( { keywords: value } ).exec(function(error, volume) {
-			if (volume.routes.length > 0) {
-				//console.log(volume);
-				for (i = 0; i < volume.routes.length; i++) {
-					tags.push(volume.routes[i]);
-					console.log('pushed route:' + volume.routes[i]);
-				}
+	function hasRoutes() {
+		var routes = [];
+		if (tags.length > 0) {
+			for (i = 0; i < tags.length; i++) {
+				var value = tags[i];
+				Library.findOne({ keywords: value }).exec(function(error, volume) {
+					for (x = 0; x < volume.routes.length; x++) {
+						tags.push(volume.routes[x]);
+						console.log('pushed :' + volume.routes[x]);
+						if (x == (volume.routes.length - 1)) {
+							postReady();
+						}
+					}
+				});
 			}
-			else {
-				console.log('No Routes');
-			}
-		});
-
-		postReady();
+		}
+		else {
+			postReady();
+		}
 	}
 
 /*
@@ -68,9 +66,6 @@ exports.index_post = function(req, res) {
 			,	routes: ['#football', '#nfl', '#nfc', '#nfc-north']
 			}).save();
 */
-
-	
-
 	function postReady() {
 
 		//POST to mongo
