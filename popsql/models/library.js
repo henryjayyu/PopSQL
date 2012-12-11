@@ -7,12 +7,12 @@ var mongoose = require('mongoose')
 
 var postSchema = new Schema({
         team: String
-    ,   city: String
-    ,   state: String
+    ,   location: Array
     ,   conf: String
     ,   league: String
     ,   sport: String
-    ,   tokens: Array
+    ,   keywords: Array
+    ,   routes: Array
 });
 
 module.exports = mongoose.model('library', postSchema);

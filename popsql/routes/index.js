@@ -12,74 +12,83 @@ exports.index_post = function(req, res) {
 
 	var users_ip = req.header('x-forwarded-for') || req.connection.remoteAddress;
 
-	//Gen1 Analysis
+	//Split post to find tokens.
 	var str = req.body.post_content
 		,	str_parts = str.split(' ')
 		,	tags = []
 		,	adds = [];
 
+	//Find Tokens
+	str_parts.forEach(isToken);
+
 	function isToken(value, index, array) {
 		if (value.charAt(0).match(/#/)) {
 			tags.push(value);
-
-			new Library({
-				team: '49ers'
-			,	city: 'San Francisco'
-			,	state: 'CA'
-			,	conf: 'NFC'
-			,	league: 'NFL'
-			,	sport: 'Football'
-			,	tokens: [ 
-				'#49ers'
-			,	'#san_francisco'
-			,	'#CA'
-			,	'#nfc'
-			,	'#nfl'
-			,	'football'
-			]
-			}).save();
-
-/*
-			function isChild(value) {
-				Library.findOne( { tokens: value } ).exec(function(error, volume) {
-					console.log("debug:" + value);
-				});
-			}
-
-			if (isChild(value)) {
-				for (i = 0; i < tokens.length; i++) {
-					console.log(token[i]);
-				}
-			}
-*/
-
-/*
-			if (value == '#packers') {
-				tags.push('#nfl');
-			}
-*/
+			console.log('pushed token: ' + value);
 		}
+
 		else if (value.charAt(0).match(/@/)) {
 			adds.push(value);
 		}
 	}
 
-	str_parts.forEach(isToken);
+	if (tags.length > 0) {
+		tags.forEach(hasRoute);
+	}
+	else {
+		console.log(tags.length);
+		postReady(); //escape
+	}
 
-	//POST to mongo
-	new Post({
-			post: req.body.post_content
-		,	user_ip: users_ip
-		, 	tags: tags
-		,	adds: adds
-		}).save();
-	
-	//POST to user feed	
-	Post.find({post: req.body.post_content, user_ip: users_ip}).sort({date: -1}).limit(1).exec(function(error, my_post) {
-		res.render('post', {
-			posts_array: my_post
+	function hasRoute(value, index, array) {
+		Library.findOne( { keywords: value } ).exec(function(error, volume) {
+			if (volume.routes.length > 0) {
+				//console.log(volume);
+				for (i = 0; i < volume.routes.length; i++) {
+					tags.push(volume.routes[i]);
+					console.log('pushed route:' + volume.routes[i]);
+				}
+			}
+			else {
+				console.log('No Routes');
+			}
 		});
-   	});
+
+		postReady();
+	}
+
+/*
+			new Library({
+				team: 'Packers'
+			,	location: ['Green Bay','WI']
+			,	conf: 'NFC'
+			,	league: 'NFL'
+			,	sport: 'Football'
+			,	keywords: ['#packers', '#green_bay']
+			,	routes: ['#football', '#nfl', '#nfc', '#nfc-north']
+			}).save();
+*/
+
+	
+
+	function postReady() {
+
+		//POST to mongo
+		console.log('posted now!');
+		new Post({
+				post: req.body.post_content
+			,	user_ip: users_ip
+			, 	tags: tags
+			,	adds: adds
+			}).save();
+		
+		//POST to user feed	
+		Post.find({post: req.body.post_content, user_ip: users_ip}).sort({date: -1}).limit(1).exec(function(error, my_post) {
+			res.render('post', {
+				posts_array: my_post
+			});
+	   	});
+	}
 };
 
 
