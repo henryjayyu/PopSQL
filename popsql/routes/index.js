@@ -23,7 +23,7 @@ exports.index_post = function(req, res) {
 		//POST to mongo
 		console.log('posted now!');
 		new Post({
-				post: req.body.post_content
+				post: str
 			,	user_ip: users_ip
 			, 	tags: tags
 			,	adds: adds
@@ -84,6 +84,7 @@ exports.index_post = function(req, res) {
 			}
 
 		}
+		//str.replace("?","<span class='query'>?");
 		pushPost();
 	}
 
