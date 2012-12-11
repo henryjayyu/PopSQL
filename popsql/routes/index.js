@@ -18,55 +18,7 @@ exports.index_post = function(req, res) {
 		,	tags = []
 		,	adds = [];
 
-	//Find Tokens
-	for (i = 0; i < str_parts.length; i++) {
-		var value = str_parts[i];
-		if (value.charAt(0).match(/#/)) {
-			tags.push(value); //located tag
-			console.log('pushed tag: ' + value);
-		}
-		else if (value.charAt(0).match(/@/)) {
-			adds.push(value); //located address
-			console.log('pushed add: ' + value);
-		}
-	}
-	console.log('find tokens completed')
-	hasRoutes(tags);
-
-
-	function hasRoutes() {
-		var routes = [];
-		if (tags.length > 0) {
-			for (i = 0; i < tags.length; i++) {
-				var value = tags[i];
-				Library.findOne({ keywords: value }).exec(function(error, volume) {
-					for (x = 0; x < volume.routes.length; x++) {
-						tags.push(volume.routes[x]);
-						console.log('pushed :' + volume.routes[x]);
-						if (x == (volume.routes.length - 1)) {
-							postReady();
-						}
-					}
-				});
-			}
-		}
-		else {
-			postReady();
-		}
-	}
-
-/*
-			new Library({
-				team: 'Packers'
-			,	location: ['Green Bay','WI']
-			,	conf: 'NFC'
-			,	league: 'NFL'
-			,	sport: 'Football'
-			,	keywords: ['#packers', '#green_bay']
-			,	routes: ['#football', '#nfl', '#nfc', '#nfc-north']
-			}).save();
-*/
-	function postReady() {
+	function pushPost() {
 
 		//POST to mongo
 		console.log('posted now!');
@@ -83,8 +35,68 @@ exports.index_post = function(req, res) {
 				posts_array: my_post
 			});
 	   	});
+
 	}
+
+	function findTokens(source, callback) {
+		var isQuery = 0;
+		var query = '';
+		for (i = 0; i < source.length; i++) {
+			var value = source[i];
+			//console.log("word" + i + ":" + source[i]);
+			
+			if (isQuery == 0) {
+
+				if (value.charAt(0).match(/#/)) {
+					tags.push(value); //located tag
+					console.log('pushed tag: ' + value);
+				}
+				else if (value.charAt(0).match(/@/)) {
+					adds.push(value); //located address
+					console.log('pushed add: ' + value);
+				}
+				else if (value.charAt(0).match(/\?/)) {
+					if (i == 0) {
+						console.log('found query');
+						query = value;
+						isQuery = 1;
+					}
+					else {
+						console.log('found query include!');
+						query = value;
+						isQuery = 1;
+					}
+				}
+
+			}
+
+			else {
+
+				if (value.charAt(value.length - 1).match(/\?/)) {
+					query = query + ' ' + value;
+					console.log('end of query');
+					console.log(query);
+				}
+				else {
+					query = query + ' ' + value;
+				}
+
+			}
+
+		}
+		pushPost();
+	}
+
+	findTokens(str_parts, function (error, result) {
+		if (error) {
+			console.log('findTokens Error');
+		}
+		else {
+			console.log('findTokens Worked');
+		}
+	});
 };
+
 
 
 /*
