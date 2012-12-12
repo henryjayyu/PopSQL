@@ -12,12 +12,22 @@ $(document).ready(function() {
 	
 	cLimit('#cmdLine_parent', 'textarea[name=post_content]', 'span[data-name=popbox_label]', '#popbox_submit', 140);
 
+	//idendtify queries
+	function isQuery(data) {
+		if (data.match('&lt;query&gt;')) {
+			data = data.replace(/&lt;query&gt;/g, "<span class='query'>");
+			data = data.replace(/&lt;\/query&gt;/g, "</span>");
+			return data;
+		}
+	}
+
 	//initialize posts
 	$.post('/postback', {
 			action: 'initialize'
 	}, function(data) {
-		if(data) {
-			$('.feed').prepend(data);
+		if (data) {
+			var post = isQuery(data);
+			$('.feed').prepend(post);
 			$('.feed').fadeIn();
 			//reset
 			$('abbr.timeago').timeago();
@@ -55,7 +65,8 @@ $(document).ready(function() {
 				,	date: last_poll 
 			}, function(data) {
 				if (data) {
-					$('.feed').prepend(data);
+					var post = isQuery(data);
+					$('.feed').prepend(post);
 					//reset
 					$('.new_posts').slideUp(200, function() {
 						last_poll = new Date();
@@ -73,8 +84,9 @@ $(document).ready(function() {
 			var options = {
 				url: '/post',
 				success: function(data) {
+					var post = isQuery(data);
 					$('textarea[name=post_content]').attr('value','');
-					$('.feed').prepend(data);
+					$('.feed').prepend(post);
 					//reset
 					$('abbr.timeago').timeago();
 				},

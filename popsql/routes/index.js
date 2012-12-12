@@ -27,20 +27,26 @@ exports.index_post = function(req, res) {
 			,	user_ip: users_ip
 			, 	tags: tags
 			,	adds: adds
-			}).save();
-		
-		//POST to user feed	
-		Post.find({post: req.body.post_content, user_ip: users_ip}).sort({date: -1}).limit(1).exec(function(error, my_post) {
-			res.render('post', {
-				posts_array: my_post
-			});
-	   	});
+			}).save(function(err) {
+				if (err) {
+					console.log('post save error!');
+				}
+				else {
 
+					//POST to user feed	
+					Post.find({post: str, user_ip: users_ip}).sort({date: -1}).limit(1).exec(function(error, my_post) {
+						res.render('post', {
+							posts_array: my_post
+						});
+				   	});
+				}
+			});
 	}
 
-	function findTokens(source, callback) {
-		var isQuery = 0;
-		var query = '';
+	function findTokens(source) {
+		var isQuery = 0
+		,	query = 0
+		,	queries = [];
 		for (i = 0; i < source.length; i++) {
 			var value = source[i];
 			//console.log("word" + i + ":" + source[i]);
@@ -58,12 +64,12 @@ exports.index_post = function(req, res) {
 				else if (value.charAt(0).match(/\?/)) {
 					if (i == 0) {
 						console.log('found query');
-						query = value;
+						queries[query] = value;
 						isQuery = 1;
 					}
 					else {
 						console.log('found query include!');
-						query = value;
+						queries[query] = value;
 						isQuery = 1;
 					}
 				}
@@ -73,18 +79,31 @@ exports.index_post = function(req, res) {
 			else {
 
 				if (value.charAt(value.length - 1).match(/\?/)) {
-					query = query + ' ' + value;
+					queries[query] = queries[query] + ' ' + value;
 					console.log('end of query');
-					console.log(query);
+					console.log(queries[query]);
+					query++;
+					isQuery = 0;
 				}
 				else {
-					query = query + ' ' + value;
+					queries[query] = queries[query] + ' ' + value;
 				}
 
 			}
 
 		}
-		//str.replace("?","<span class='query'>?");
+		
+		if (queries[0] != undefined) {
+			for (i = 0; i < queries.length; i++) {
+				str = str.replace(queries[i], "<query>" + queries[i] + "</query>");
+			}
+			console.log('Query True');
+			console.log(queries[0]);
+		}
+		else {
+			console.log('Query False');
+		}
+		console.log(str);
 		pushPost();
 	}
 
