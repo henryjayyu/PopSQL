@@ -17,8 +17,8 @@ $(document).ready(function() {
 		if (data.match('&lt;query&gt;')) {
 			data = data.replace(/&lt;query&gt;/g, "<span class='query'>");
 			data = data.replace(/&lt;\/query&gt;/g, "</span>");
-			return data;
 		}
+		return data;
 	}
 
 	//initialize posts
