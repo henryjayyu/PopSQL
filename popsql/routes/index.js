@@ -47,28 +47,45 @@ exports.index_post = function(req, res) {
 		var isQuery = 0
 		,	query = 0
 		,	queries = [];
+
+		function isToken(value, arr) {
+			if (arr == '?') {
+				value = value.replace(/\?/g, "");
+				if (value.charAt(0).match(/#/)) {
+					tags.push(value); //located tag
+				}
+				else if (value.charAt(0).match(/@/)) {
+					adds.push(value); //located add
+				}
+			}
+			else {
+				if (value.charAt(0).match(/#/)) {
+					tags.push(value); //located tag
+				}
+				else if (value.charAt(0).match(/@/)) {
+					adds.push(value); //located add
+				}
+			}
+		}
+
 		for (i = 0; i < source.length; i++) {
 			var value = source[i];
 			//console.log("word" + i + ":" + source[i]);
 			
 			if (isQuery == 0) {
 
-				if (value.charAt(0).match(/#/)) {
-					tags.push(value); //located tag
-					console.log('pushed tag: ' + value);
-				}
-				else if (value.charAt(0).match(/@/)) {
-					adds.push(value); //located address
-					console.log('pushed add: ' + value);
-				}
-				else if (value.charAt(0).match(/\?/)) {
+				isToken(value);
+				
+				if (value.charAt(0).match(/\?/)) {
 					if (i == 0) {
-						console.log('found query');
+						//query
+						isToken(value, '?');
 						queries[query] = value;
 						isQuery = 1;
 					}
 					else {
-						console.log('found query include!');
+						//query include
+						isToken(value, '?');
 						queries[query] = value;
 						isQuery = 1;
 					}
@@ -77,11 +94,11 @@ exports.index_post = function(req, res) {
 			}
 
 			else {
+				
+				isToken(value, '?');
 
 				if (value.charAt(value.length - 1).match(/\?/)) {
 					queries[query] = queries[query] + ' ' + value;
-					console.log('end of query');
-					console.log(queries[query]);
 					query++;
 					isQuery = 0;
 				}
@@ -98,7 +115,6 @@ exports.index_post = function(req, res) {
 				str = str.replace(queries[i], "<query>" + queries[i] + "</query>");
 			}
 			console.log('Query True');
-			console.log(queries[0]);
 		}
 		else {
 			console.log('Query False');
