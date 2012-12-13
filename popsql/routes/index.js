@@ -4,6 +4,10 @@ var mongoose = require('mongoose');
 //Global Models
 var Post = require('../models/post.js');
 var Library = require('../models/library.js');
+var Search = require('../models/search.js');
+
+//REST Models
+//var Weather = require('http://api.wunderground.com/api/8bacae0472865331/conditions/q/CA/San_Francisco.json');
 
 /*
  * POST handle posts.
@@ -16,12 +20,77 @@ exports.index_post = function(req, res) {
 	var str = req.body.post_content
 		,	str_parts = str.split(' ')
 		,	tags = []
-		,	adds = [];
+		,	adds = []
+		,	queries = [];
+
+	function delegateQueries(str) {
+		if (queries[0] != undefined) {
+			console.log(queries);
+			var i = 0
+			,	max = queries.length;
+			//Log Query
+
+			function hasResponse() {
+				if (i < max) {
+					Search.findOne({ query: queries[i] }).exec(function(err, result) {
+						if (err) {
+							console.log('Search.find error!');
+						}
+						else {
+							if (result == undefined) {
+								saveQuery();
+							}
+							else {
+								if (result.response == undefined && result.conditional == 0) {
+									console.log('sorry no answer.');
+								}
+								else {
+									new Post({
+										author: 'Popsql'
+									,	users_ip: '107.23.94.247'
+									,	spriteID: '/images/host.png'
+									,	post: result.response
+									}).save(function(err) {
+										if (err) {
+											console.log('response.post error!');
+										}
+										else {
+											console.log('response.post success!');
+										}
+
+									});
+								}
+							}
+						}
+
+					});
+				}
+			}
+
+			function saveQuery() {
+				if (i < max) {
+					new Search({
+						user_ip: users_ip
+					,	query: queries[i]
+					}).save(function(err) {
+						if (err) {
+							console.log('query save error!');
+						}
+						else {
+							console.log('query save success!');
+							hasResponse(i++);
+						}
+					});
+				}
+			}
+			hasResponse();
+			//saveQuery();
+		}
+	}
 
 	function pushPost() {
 
 		//POST to mongo
-		console.log('posted now!');
 		new Post({
 				post: str
 			,	user_ip: users_ip
@@ -38,6 +107,8 @@ exports.index_post = function(req, res) {
 						res.render('post', {
 							posts_array: my_post
 						});
+						console.log('Posted Now!');
+						delegateQueries(str);
 				   	});
 				}
 			});
@@ -45,8 +116,7 @@ exports.index_post = function(req, res) {
 
 	function findTokens(source) {
 		var isQuery = 0
-		,	query = 0
-		,	queries = [];
+		,	query = 0;
 
 		function isToken(value, arr) {
 			if (arr == '?') {
@@ -157,7 +227,7 @@ exports.index_postback = function(req, res){
 		Post.find().sort({date: -1}).limit(10).exec(function(error, posts) {
 			
 			for(i = 0; i < posts.length; i++) {
-				if (posts[i].user_ip != users_ip) {
+				if (posts[i].spriteID != '/images/host.png' && posts[i].user_ip != users_ip) {
 					posts[i].spriteID = '/images/guest_b.png';
 				}
 			}
