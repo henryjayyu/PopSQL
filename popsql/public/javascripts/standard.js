@@ -4,8 +4,13 @@ function getBaseURL() {
 	return location.protocol + "//" + location.hostname + (location.port && ":" + location.port) + "/";
 }
 
-
 $(document).ready(function() {
+
+	var socket = io.connect('http://localhost:3000');
+	socket.on('news', function (data) {
+		console.log("client:" + data);
+		socket.emit('my other event', { my: 'data' });
+	});
 
 	//services
 	$('abbr.timeago').timeago();
