@@ -42,7 +42,14 @@ exports.index_post = function(req, res) {
 							}
 							else {
 								if (result.response == undefined && result.conditional == 0) {
-									console.log('sorry no answer.');
+									Search.update({ query: queries[i] },{ $inc: { poll: 1 }}).exec(function(err) {
+										if (err) {
+											console.log('update search poll error!')
+										}
+										else {
+											console.log('sorry no answer.');
+										}
+									})
 								}
 								else {
 									new Post({
@@ -57,6 +64,14 @@ exports.index_post = function(req, res) {
 										else {
 											console.log('response.post success!');
 										}
+										Search.update({ query: queries[i] },{ $inc: { poll: 1 }}).exec(function(err) {
+											if (err) {
+												console.log('update search poll error!');
+											}
+											else {
+												console.log('update search poll success!');
+											}
+										});
 
 									});
 								}
@@ -72,6 +87,8 @@ exports.index_post = function(req, res) {
 					new Search({
 						user_ip: users_ip
 					,	query: queries[i]
+					,	poll: 1
+					,	conditional: 0
 					}).save(function(err) {
 						if (err) {
 							console.log('query save error!');
@@ -222,16 +239,19 @@ exports.index_postback = function(req, res){
 	var action = req.body.action
 	,	users_ip = req.header('x-forwarded-for') || req.connection.remoteAddress;
 
+	function manageSprites(posts) {
+		for(i = 0; i < posts.length; i++) {
+			if (posts[i].spriteID != '/images/host.png' && posts[i].user_ip != users_ip) {
+				posts[i].spriteID = '/images/guest_b.png';
+			}
+		}
+		return posts;
+	}
+
 	//initialize feed
 	if (action == 'initialize') {
-		Post.find().sort({date: -1}).limit(10).exec(function(error, posts) {
-			
-			for(i = 0; i < posts.length; i++) {
-				if (posts[i].spriteID != '/images/host.png' && posts[i].user_ip != users_ip) {
-					posts[i].spriteID = '/images/guest_b.png';
-				}
-			}
-
+		Post.find().sort({date: -1}).limit(10).exec(function(err, posts) {
+			manageSprites(posts);
 			res.render('post', {
 				posts_array: posts
 			});
@@ -241,7 +261,7 @@ exports.index_postback = function(req, res){
 	//poll
 	else if (action == 'poll') {
 		var last_poll = req.body.date;
-		Post.find({date: {$gt: last_poll}, user_ip: {$ne: users_ip}}).count().exec(function(error, new_posts) {
+		Post.find({date: {$gt: last_poll}, user_ip: {$ne: users_ip}}).count().exec(function(err, new_posts) {
 			res.json(new_posts);
 		});
 	}
@@ -249,16 +269,8 @@ exports.index_postback = function(req, res){
 	//update feed
 	else if (action == 'update_feed') {
 		var last_poll = req.body.date;
-		Post.find({date: {$gt: last_poll}, user_ip: {$ne: users_ip}}).exec(function(error, posts) {
-
-			console.log(posts);
-
-			for(i = 0; i < posts.length; i++) {
-				if (posts[i].user_ip != users_ip) {
-					posts[i].spriteID = '/images/guest_b.png';
-				}
-			}
-
+		Post.find({date: {$gt: last_poll}, user_ip: {$ne: users_ip}}).exec(function(err, posts) {
+			manageSprites(posts);
 			res.render('post', {
 				posts_array: posts
 			});

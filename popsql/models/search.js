@@ -10,6 +10,7 @@ var searchSchema = new Schema({
     ,   author: { type: String
     ,   default: 'Guest' }
     ,   query: String
+    ,	poll: Number
     ,   response: String
     ,   conditional: Boolean
 });
