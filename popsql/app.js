@@ -95,11 +95,143 @@ server.listen(app.get('port'), function() {
   console.log("Express server listening on port " + app.get('port'));
 });
 
-//Websocket
+//Websocket Globals
+var Post = require('./models/post.js');
+
+    users_ip = ''
+,   str = ''
+,   str_parts = ''
+,   tags = []
+,   adds = []
+,   queries = [];
+
+function pushPost() {
+
+  //POST to mongo
+  new Post({
+    post: str
+  , user_ip: users_ip
+  , tags: tags
+  , adds: adds
+  }).save(function (err) {
+    if (err) {
+      console.log('Post ERROR!');
+    }
+    else {
+      Post.findOne( { post: str, user_ip : users_ip } ).exec(function (err, newUserPost) {
+        return newUserPost;
+      });
+    }
+  });
+}
+
+function manageSprites(data, users_ip) {
+  for(var i = 0; i < data.length; i++) {
+    if (data[i].spriteID != '/images/host.png' && data[i].user_ip != users_ip) {
+      data[i].spriteID = '/images/guest_b.png';
+    }
+  }
+  return data; 
+}
+
+function declareToken(value) {
+  if (value.charAt(0).match(/#/)) {
+    tags.push(value); //located tag
+  }
+  else if (value.charAt(0).match(/@/)) {
+    adds.push(value); //located add
+  }
+}
+
+function isToken(value, arg) {
+  if (arg == '?') {
+    value = value.replace(/\?/g, ""); //scrub char(?)
+    declareToken(value);
+  }
+  else {
+    declareToken(value);
+  }
+}
+
+function findTokens(str_parts) {
+  var isQuery = 0
+  ,   query = 0;
+
+  for (var i = 0; i < str_parts.length; i++) {
+    var value = str_parts[i];
+
+    if (isQuery == 0) {
+      isToken(value);
+
+      if (value.charAt(0).match(/\?/)) {
+
+        if (i == 0) { 
+          //query?
+        }
+        else { 
+          //query include?
+        }
+        isToken(value, '?');
+        isQuery = 1
+      , queries[query] = value;
+      }
+
+    }
+
+    else {
+      isToken(value, '?');
+
+      if (value.charAt(value.length -1).match(/\?/)) {
+        queries[query] += ' ' + value
+      , query++
+      , isQuery = 0;
+      }
+
+      else {
+        queries[query] += ' ' + value;
+      }
+
+    }
+
+  }
+
+  if (queries[0] != undefined) {
+    for (var i = 0; i < queries.length; i++) {
+      str = str.replace(queries[i], "<query>" + queries[i] + "</query>");
+    }
+    console.log('Found Query!');
+  }
+
+  else {
+    console.log('No Queries!');
+  }
+
+  var newUserPost = pushPost();
+  console.log(newUserPost);
+  return newUserPost;
+}
 
 io.sockets.on('connection', function (socket) {
-  socket.emit('connected', 'connected');
-  socket.on('post', function (data) {
-    socket.broadcast.emit('newPost', true);
+
+  users_ip = socket.handshake.address.address;
+
+  Post.find().limit(5).exec(function (err, post) {
+    //initialize feed
+    manageSprites(post, users_ip);
+    socket.emit('connected', post);
+  });
+
+  socket.on('userPost', function (data) {
+    console.log("got post: " + data['content']);
+    socket.emit('receipt', true); //send receipt
+
+    str = data['content'];
+    str_parts = str.split(' ');
+
+    findTokens(str_parts, function (data) {
+        console.log(data);
+    });
+
+    //socket.broadcast.emit('newPost', true);
   });
 });

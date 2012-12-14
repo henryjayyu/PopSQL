@@ -249,11 +249,10 @@ exports.index_postback = function(req, res){
 
 	//initialize feed
 	if (action == 'initialize') {
-		Post.find().sort({date: -1}).limit(10).exec(function(err, posts) {
+		Post.find().sort({date: -1}).limit(2).exec(function(err, posts) 
+		{
 			manageSprites(posts);
-			res.render('post', {
-				posts_array: posts
-			});
+			res.send(posts)
 		});
 	}
 
