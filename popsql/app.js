@@ -91,15 +91,15 @@ app.get('/users', user.list);
 app.post('/postback', routes.index_postback);
 app.post('/post', routes.index_post);
 
-
 server.listen(app.get('port'), function() {
   console.log("Express server listening on port " + app.get('port'));
 });
 
 //Websocket
+
 io.sockets.on('connection', function (socket) {
-  socket.emit('news', { hello: 'world' });
-  socket.on('my other event', function (data) {
-    console.log("server:" + data);
+  socket.emit('connected', 'connected');
+  socket.on('post', function (data) {
+    socket.broadcast.emit('newPost', true);
   });
 });

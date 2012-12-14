@@ -124,7 +124,6 @@ exports.index_post = function(req, res) {
 						res.render('post', {
 							posts_array: my_post
 						});
-						console.log('Posted Now!');
 						delegateQueries(str);
 				   	});
 				}

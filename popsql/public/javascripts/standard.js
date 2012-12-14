@@ -6,9 +6,9 @@ function getBaseURL() {
 
 $(document).ready(function() {
 
-	var socket = io.connect('http://localhost:3000');
+	var socket = io.connect(HTTP_HOST);
+
 	socket.on('news', function (data) {
-		console.log("client:" + data);
 		socket.emit('my other event', { my: 'data' });
 	});
 
@@ -27,16 +27,25 @@ $(document).ready(function() {
 	}
 
 	//initialize posts
-	$.post('/postback', {
-			action: 'initialize'
-	}, function(data) {
-		if (data) {
-			var post = isQuery(data);
-			$('.feed').prepend(post);
-			$('.feed').fadeIn();
-			//reset
-			$('abbr.timeago').timeago();
+	socket.on('connected', function (data) {
+		if(data == 'connected') {
+			$.post('/postback', {
+					action: 'initialize'
+			}, function(data) {
+				if (data) {
+					var post = isQuery(data);
+					$('.feed').prepend(post);
+					$('.feed').fadeIn();
+					//reset
+					$('abbr.timeago').timeago();
+				}
+			});
 		}
+	});
+
+	//poll
+	socket.on('newPost', function (data) {
+		alert(data);
 	});
 
 	//poll
@@ -94,6 +103,7 @@ $(document).ready(function() {
 					$('.feed').prepend(post);
 					//reset
 					$('abbr.timeago').timeago();
+					socket.emit('post', 'success');
 				},
 			};
 
