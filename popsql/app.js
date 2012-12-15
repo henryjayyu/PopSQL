@@ -220,15 +220,13 @@ function findTokens(str_parts) {
       console.log("Post: SUCCESS!");
       Post.findOne( { post: str, user_ip : users_ip } ).exec(function (err, userPost) {
         console.log("Post: CONSTRUCTED!");
-        finish("hello");
+        return callback("hello");
       });
     }
   });
-
-  function finish(data) {
-    callback(data);
-  }
 }
+
+var test = require('./models/test.js');
 
 io.sockets.on('connection', function (socket) {
 
@@ -241,18 +239,23 @@ io.sockets.on('connection', function (socket) {
   });
 
   socket.on('userPost', function (data) {
-    console.log("got post: " + data['content']);
+    console.log("received post: " + data['content']);
     socket.emit('receipt', true); //send receipt
 
     str = data['content']
   , str_parts = str.split(' ');
 
+    var callback = test.callback(str, function (data) {
+      console.log('callback: ' + data);
+    });
+
+/*
     findTokens(str_parts, function (callback) {
       if (callback) {
         console.log("callback");
       }
     });
-    
+*/    
     //socket.broadcast.emit('newPost', true);
   });
 });
