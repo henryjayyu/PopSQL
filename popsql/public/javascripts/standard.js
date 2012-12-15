@@ -64,14 +64,24 @@ $(document).ready(function() {
 
 	//Post
 	$('#cmdLine_parent').on('submit', '#cmdLine',
-		function() {
+		function () {
 
 			socket.emit('userPost', {
 				content: $('textarea[name=post_content]').attr('value')	
 			});
 
-			socket.on('receipt', function(data) {
+			socket.on('receipt', function (data) {
 				$('textarea[name=post_content]').attr('value','');
+			});
+
+			socket.on('myPost', function (data) {
+				if (data) {
+					var posts = addPosts(data);
+					$('.feed').prepend(posts);
+					$('.feed').fadeIn();
+					//reset
+					$('abbr.timeago').timeago();
+				}
 			});
 
 			return false;

@@ -113,16 +113,20 @@ function pushPost() {
   , user_ip: users_ip
   , tags: tags
   , adds: adds
-  }).save(function (err) {
+  }).save(function (err, callback1) {
     if (err) {
       console.log('Post ERROR!');
     }
     else {
-      Post.findOne( { post: str, user_ip : users_ip } ).exec(function (err, newUserPost) {
-        return newUserPost;
+      Post.findOne( { post: str, user_ip : users_ip } ).exec(function (err, callback2) {
+        return callback2;
       });
     }
+    console.log("this is cb1" + callback1);
+    return callback1;
   });
+
+
 }
 
 function manageSprites(data, users_ip) {
@@ -135,6 +139,7 @@ function manageSprites(data, users_ip) {
 }
 
 function declareToken(value) {
+  console.log("declareToken!");
   if (value.charAt(0).match(/#/)) {
     tags.push(value); //located tag
   }
@@ -144,6 +149,7 @@ function declareToken(value) {
 }
 
 function isToken(value, arg) {
+  console.log("isToken!");
   if (arg == '?') {
     value = value.replace(/\?/g, ""); //scrub char(?)
     declareToken(value);
@@ -162,9 +168,7 @@ function findTokens(str_parts) {
 
     if (isQuery == 0) {
       isToken(value);
-
       if (value.charAt(0).match(/\?/)) {
-
         if (i == 0) { 
           //query?
         }
@@ -175,40 +179,55 @@ function findTokens(str_parts) {
         isQuery = 1
       , queries[query] = value;
       }
-
     }
 
     else {
       isToken(value, '?');
-
       if (value.charAt(value.length -1).match(/\?/)) {
         queries[query] += ' ' + value
       , query++
       , isQuery = 0;
       }
-
       else {
         queries[query] += ' ' + value;
       }
-
     }
-
   }
 
   if (queries[0] != undefined) {
     for (var i = 0; i < queries.length; i++) {
       str = str.replace(queries[i], "<query>" + queries[i] + "</query>");
     }
-    console.log('Found Query!');
+    console.log('Query: FOUND!');
   }
 
   else {
-    console.log('No Queries!');
+    console.log('Query: NONE!');
   }
 
-  var newUserPost = pushPost();
-  console.log(newUserPost);
-  return newUserPost;
+  //POST to mongo
+  new Post({
+    post: str
+  , user_ip: users_ip
+  , tags: tags
+  , adds: adds
+  }).save(function (err) {
+    
+    if (err) {
+      console.log('Post ERROR!');
+    }
+    else {
+      console.log("Post: SUCCESS!");
+      Post.findOne( { post: str, user_ip : users_ip } ).exec(function (err, userPost) {
+        console.log("Post: CONSTRUCTED!");
+        finish("hello");
+      });
+    }
+  });
+
+  function finish(data) {
+    callback(data);
+  }
 }
 
 io.sockets.on('connection', function (socket) {
@@ -225,13 +244,15 @@ io.sockets.on('connection', function (socket) {
     console.log("got post: " + data['content']);
     socket.emit('receipt', true); //send receipt
 
-    str = data['content'];
-    str_parts = str.split(' ');
+    str = data['content']
+  , str_parts = str.split(' ');
 
-    findTokens(str_parts, function (data) {
-        console.log(data);
+    findTokens(str_parts, function (callback) {
+      if (callback) {
+        console.log("callback");
+      }
     });
-
+    
     //socket.broadcast.emit('newPost', true);
   });
 });
