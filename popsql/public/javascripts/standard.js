@@ -6,14 +6,29 @@ function getBaseURL() {
 
 function addPosts(data) {
 	var posts = '';
-	for (i = 0; i < data.length; i++) {
-		var postID = data[i]._id
-		,	spriteID = data[i].spriteID
-		,	post_author = data[i].author
-		,	post_date = data[i].date
-		,	post_content = handleQuery(data[i].post)
-		,	tags = data[i].tags
-		,	adds = data[i].adds
+	if (data.length != undefined) {
+		for (i = 0; i < data.length; i++) {
+			var postID = data[i]._id
+			,	spriteID = data[i].spriteID
+			,	post_author = data[i].author
+			,	post_date = data[i].date
+			,	post_content = handleQuery(data[i].post)
+			,	tags = data[i].tags
+			,	adds = data[i].adds
+			,	addTags = addTokens(tags, 'Tags')
+			,	addAdds = addTokens(adds, 'Addresses')
+			,	newPost = "<div class='post' data-postID=\'" + postID + "\'>" + "<div class='sprite'>" + "<img src=\'" + spriteID + "\'>" + "</div>" + "<div class='body'>" + "<h1>" + post_author + "&nbsp;</h1>" + "<h2>@guest</h2>" + "<abbr class='timeago' title=\'" + post_date + "\'></abbr>" + "<p>" + post_content + "</p>" + "<h3>" + addTags +	addAdds + "</h3>" +	"</div>" + "</div>";
+			posts += newPost;
+		}
+	}
+	else {
+		var postID = data._id
+		,	spriteID = data.spriteID
+		,	post_author = data.author
+		,	post_date = data.date
+		,	post_content = handleQuery(data.post)
+		,	tags = data.tags
+		,	adds = data.adds
 		,	addTags = addTokens(tags, 'Tags')
 		,	addAdds = addTokens(adds, 'Addresses')
 		,	newPost = "<div class='post' data-postID=\'" + postID + "\'>" + "<div class='sprite'>" + "<img src=\'" + spriteID + "\'>" + "</div>" + "<div class='body'>" + "<h1>" + post_author + "&nbsp;</h1>" + "<h2>@guest</h2>" + "<abbr class='timeago' title=\'" + post_date + "\'></abbr>" + "<p>" + post_content + "</p>" + "<h3>" + addTags +	addAdds + "</h3>" +	"</div>" + "</div>";
@@ -57,6 +72,20 @@ $(document).ready(function() {
 		}
 	});
 
+	socket.on('receipt', function (data) {
+		$('textarea[name=post_content]').attr('value','');
+	});
+
+	socket.on('new_post', function (data) {
+		if (data) {
+			var posts = addPosts(data);
+			$('.feed').prepend(posts);
+			$('.feed').fadeIn();
+			//reset
+			$('abbr.timeago').timeago();
+		}
+	});
+
 	//services
 	$('abbr.timeago').timeago();
 	
@@ -70,27 +99,8 @@ $(document).ready(function() {
 				content: $('textarea[name=post_content]').attr('value')	
 			});
 
-			socket.on('receipt', function (data) {
-				$('textarea[name=post_content]').attr('value','');
-			});
-
-			socket.on('myPost', function (data) {
-				if (data) {
-					var posts = addPosts(data);
-					$('.feed').prepend(posts);
-					$('.feed').fadeIn();
-					//reset
-					$('abbr.timeago').timeago();
-				}
-			});
-
 			return false;
 		});
-
-	//poll
-	socket.on('newPost', function (data) {
-		alert(data);
-	});
 
 	//hotkeys (currently only adds character to end)
 	$('#cmdLine_parent').on('click', '.hotkey',
@@ -99,26 +109,6 @@ $(document).ready(function() {
 			var token = $(this).attr('value');
 			$('textarea[name=post_content]').attr('value', val + token).focus();
 		});
-
-	//update feed
-	$('#feed').on('click', '.new_posts',
-		function() {
-			$.post('/postback', {
-					action: 'update_feed'
-				,	date: last_poll 
-			}, function(data) {
-				if (data) {
-					var post = isQuery(data);
-					$('.feed').prepend(post);
-					//reset
-					$('.new_posts').slideUp(200, function() {
-						last_poll = new Date();
-						$('abbr.timeago').timeago();
-					});
-				}
-			});
-		});
-
 
 	//character limit
 	function cLimit(parent, input, label, action, limit) {

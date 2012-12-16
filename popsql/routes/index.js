@@ -233,49 +233,6 @@ exports.index = function(req, res){
 
 };
 
-exports.index_postback = function(req, res){
-
-	var action = req.body.action
-	,	users_ip = req.header('x-forwarded-for') || req.connection.remoteAddress;
-
-	function manageSprites(posts) {
-		for(i = 0; i < posts.length; i++) {
-			if (posts[i].spriteID != '/images/host.png' && posts[i].user_ip != users_ip) {
-				posts[i].spriteID = '/images/guest_b.png';
-			}
-		}
-		return posts;
-	}
-
-	//initialize feed
-	if (action == 'initialize') {
-		Post.find().sort({date: -1}).limit(2).exec(function(err, posts) 
-		{
-			manageSprites(posts);
-			res.send(posts)
-		});
-	}
-
-	//poll
-	else if (action == 'poll') {
-		var last_poll = req.body.date;
-		Post.find({date: {$gt: last_poll}, user_ip: {$ne: users_ip}}).count().exec(function(err, new_posts) {
-			res.json(new_posts);
-		});
-	}
-
-	//update feed
-	else if (action == 'update_feed') {
-		var last_poll = req.body.date;
-		Post.find({date: {$gt: last_poll}, user_ip: {$ne: users_ip}}).exec(function(err, posts) {
-			manageSprites(posts);
-			res.render('post', {
-				posts_array: posts
-			});
-		});
-	}
-};
-
 /*
  *	GET about us page.
  */
