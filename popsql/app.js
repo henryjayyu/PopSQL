@@ -96,8 +96,9 @@ server.listen(app.get('port'), function() {
 });
 
 //Websocket
-
 var postHandler = require('./models/postHandler.js')
+,   queryHandler = require('./models/queryHandler.js')
+,   hasFormula = require('./models/hasFormula.js')
 ,   sprites = require('./models/sprites.js')
 ,   Post = require('./models/post.js');
 
@@ -107,18 +108,36 @@ io.sockets.on('connection', function (socket) {
 
   Post.find().sort({date: -1}).limit(5).exec(function (err, post) {
     //initialize feed
-    sprites.handle(post, users_ip, function (initialize) {
-      socket.emit('connected', initialize);
+    sprites.handle(post, users_ip, function (callback) {
+      socket.emit('connected', callback);
     });
   });
 
   socket.on('userPost', function (data) {
-    console.log("received post: " + data['content']);
+    //console.log("received post: " + data['content']);
     socket.emit('receipt', true); //send receipt
     postHandler.process({ users_ip: users_ip, str: data['content'] }, function (data) {
-      console.log('received callback4!');
-      socket.emit('new_post', data);
-      socket.broadcast.emit('new_post', data);
+      if (data.queries != '') { //queries
+        queryHandler.process(data, function (isQuery) {
+          if (isQuery.include == false) { //post then answer
+            console.log('I see a full query');
+            io.sockets.emit('new_post', data.post);
+            //hasFormula.process(data, function (res) {
+
+            //});
+          }
+          else if (isQuery.include == true) { //post with answer
+            console.log('I see a query include');
+            //hasFormula.process(data, function (res) {
+              io.sockets.emit('new_post', data.post);
+            //});
+          }
+        });
+      }
+      else { //no queries
+        io.sockets.emit('new_post', data.post);
+      }
+
     });
 
   });
