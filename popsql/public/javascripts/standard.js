@@ -11,13 +11,14 @@ function addPosts(data) {
 			var postID = data[i]._id
 			,	spriteID = data[i].spriteID
 			,	post_author = data[i].author
+			,	post_handle = data[i].handle
 			,	post_date = data[i].date
 			,	post_content = handleQuery(data[i].post)
 			,	tags = data[i].tags
 			,	adds = data[i].adds
 			,	addTags = addTokens(tags, 'Tags')
 			,	addAdds = addTokens(adds, 'Addresses')
-			,	newPost = "<div class='post' data-postID=\'" + postID + "\'>" + "<div class='sprite'>" + "<img src=\'" + spriteID + "\'>" + "</div>" + "<div class='body'>" + "<h1>" + post_author + "&nbsp;</h1>" + "<h2>@guest</h2>" + "<abbr class='timeago' title=\'" + post_date + "\'></abbr>" + "<p>" + post_content + "</p>" + "<h3>" + addTags +	addAdds + "</h3>" +	"</div>" + "</div>";
+			,	newPost = "<div class='post' data-postID=\'" + postID + "\'>" + "<div class='sprite'>" + "<img src=\'" + spriteID + "\'>" + "</div>" + "<div class='body'>" + "<h1>" + post_author + "&nbsp;</h1>" + "<h2>" + post_handle + "</h2>" + "<abbr class='timeago' title=\'" + post_date + "\'></abbr>" + "<p>" + post_content + "</p>" + "<h3>" + addTags +	addAdds + "</h3>" +	"</div>" + "</div>";
 			posts += newPost;
 		}
 	}
@@ -25,13 +26,14 @@ function addPosts(data) {
 		var postID = data._id
 		,	spriteID = data.spriteID
 		,	post_author = data.author
+		,	post_handle = data.handle
 		,	post_date = data.date
 		,	post_content = handleQuery(data.post)
 		,	tags = data.tags
 		,	adds = data.adds
 		,	addTags = addTokens(tags, 'Tags')
 		,	addAdds = addTokens(adds, 'Addresses')
-		,	newPost = "<div class='post' data-postID=\'" + postID + "\'>" + "<div class='sprite'>" + "<img src=\'" + spriteID + "\'>" + "</div>" + "<div class='body'>" + "<h1>" + post_author + "&nbsp;</h1>" + "<h2>@guest</h2>" + "<abbr class='timeago' title=\'" + post_date + "\'></abbr>" + "<p>" + post_content + "</p>" + "<h3>" + addTags +	addAdds + "</h3>" +	"</div>" + "</div>";
+		,	newPost = "<div class='post' data-postID=\'" + postID + "\'>" + "<div class='sprite'>" + "<img src=\'" + spriteID + "\'>" + "</div>" + "<div class='body'>" + "<h1>" + post_author + "&nbsp;</h1>" + "<h2>" + post_handle + "</h2>" + "<abbr class='timeago' title=\'" + post_date + "\'></abbr>" + "<p>" + post_content + "</p>" + "<h3>" + addTags +	addAdds + "</h3>" +	"</div>" + "</div>";
 		posts += newPost;
 	}
 	return posts;

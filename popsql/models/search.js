@@ -6,13 +6,12 @@ var mongoose = require('mongoose')
    ,    ObjectId = Schema.ObjectId;
 
 var searchSchema = new Schema({
-    	user_ip: String
-    ,   author: { type: String
-    ,   default: 'Guest' }
-    ,   query: String
+		query: String
     ,	poll: Number
     ,   response: String
-    ,   conditional: Boolean
+    ,   has_formula: { type: Boolean
+    ,	default: false}
+    ,	formula: Array
 });
 
 module.exports = mongoose.model('search', searchSchema);

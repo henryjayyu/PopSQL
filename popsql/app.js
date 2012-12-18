@@ -122,9 +122,12 @@ io.sockets.on('connection', function (socket) {
           if (isQuery.include == false) { //post then answer
             console.log('I see a full query');
             io.sockets.emit('new_post', data.post);
-            //hasFormula.process(data, function (res) {
-
-            //});
+            hasFormula.process(data, function (formula) {
+              console.log('This is formula: ' + formula);
+              for (var i = 0; i < formula.length; i++) {
+                socket.emit('new_post', formula[i].post);
+              }
+            });
           }
           else if (isQuery.include == true) { //post with answer
             console.log('I see a query include');

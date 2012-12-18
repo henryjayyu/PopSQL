@@ -18,16 +18,6 @@ function determine_query(req, callback) {
 	else {
 		return callback(true);
 	}
-
-//	var split = req.post['post'].split(/<query>/);
-//	console.log('split.length: ' + split.length);
-//	console.log('split: ' + split);
-//	if (split.length = 2 && split[0] = "") {
-//		return callback('query');
-//	}
-//	else {
-//		return callback('include');
-//	}
 }
 
 module.exports = {

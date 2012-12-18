@@ -11,6 +11,8 @@ var postSchema = new Schema({
     ,   default: Date.now }
     ,   author: { type: String
     ,   default: 'Guest' }
+    ,   handle: { type: String
+    ,   default: '@guest' }
     ,   user_ip: String
     ,   spriteID: { type: String
     ,   default: '/images/guest_a.png'}
