@@ -131,9 +131,12 @@ io.sockets.on('connection', function (socket) {
           }
           else if (isQuery.include == true) { //post with answer
             console.log('I see a query include');
-            //hasFormula.process(data, function (res) {
+            hasFormula.process(data, function (formula) {
               io.sockets.emit('new_post', data.post);
-            //});
+              for (var i = 0; i < formula.length; i++) {
+                socket.emit('new_post', formula[i].post);
+              }
+            });
           }
         });
       }

@@ -11,6 +11,7 @@ function indexQueries(req, res) { //processes queries for response
 
 function indexQuery(req, i, res) { //recursive function
 	if (i < req.length) {
+		req[i] = req[i].toLowerCase(); //normalize to lowercase
 		Search.findOne( { query: req[i] } ).exec(function (err, result) {
 			if (result == null) { //new query
 				addQuery(req[i], function (newQuery) {
@@ -104,12 +105,13 @@ function noAnswer(req, res) { //responds no answer
 	});
 }
 
-
 module.exports = {
 	process: function(req, res) {
-		console.log('hasFormula.js:' + req);
-		indexQueries(req, function (callback) {
-			return res(callback);
-		});
+		if (req) {
+			console.log('hasFormula.js:' + req);
+			indexQueries(req, function (callback) {
+				return res(callback);
+			});
+		}
 	}
 };
