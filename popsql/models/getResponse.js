@@ -93,7 +93,7 @@ function handleResponse(req, res) {
 				else { //cached answer
 					if (req.expired < new Date()) { //expired answer?
 						console.log('expired formula');
-						useFormula.process({ header: { host: 'api.wunderground.com', path: '/api/8bacae0472865331/' }, arg: ['conditions/', 'q/', 'ca/', 'santa_monica', '.json'] }, function (callback) {
+						useFormula.process({ formula: 'wunderground' , header: { host: 'api.wunderground.com', path: '/api/8bacae0472865331/' }, arg: ['conditions/', 'q/', 'ca/', 'santa_monica', '.json'] }, function (callback) {
 							console.log(callback);
 						});
 					}

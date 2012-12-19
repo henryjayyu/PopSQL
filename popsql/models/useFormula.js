@@ -5,6 +5,15 @@ var options = {
 ,	header: { 'Content-Type': 'application/json' }
 }
 
+// set up the possible functions:
+var Formulas = {
+  wunderground: function (req, res) {
+  	console.log('this is ');
+  	return res(true);
+  },
+};
+// execute the one specified in the 'funcToRun' variable:
+
 function constructor(req, res) {
 	options.host = req['header']['host']
 ,	options.path = req['header']['path'];
@@ -17,7 +26,12 @@ function constructor(req, res) {
 }
 
 function blender(req, res) {
-	console.log('got something: ' + req['data']['response']['version']);
+	var formula = req['formula']['formula'];
+
+	Formulas[formula](req, function (callback) {
+		console.log('so cool!');
+	});
+
 }
 
 module.exports = {
