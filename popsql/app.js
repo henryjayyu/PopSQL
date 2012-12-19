@@ -98,7 +98,8 @@ server.listen(app.get('port'), function() {
 //Websocket
 var postHandler = require('./models/postHandler.js')
 ,   queryHandler = require('./models/queryHandler.js')
-,   hasFormula = require('./models/hasFormula.js')
+,   getResponse = require('./models/getResponse.js')
+,   useFormula = require('./models/useFormula.js')
 ,   sprites = require('./models/sprites.js')
 ,   Post = require('./models/post.js');
 
@@ -122,20 +123,17 @@ io.sockets.on('connection', function (socket) {
           if (isQuery.include == false) { //post then answer
             console.log('I see a full query');
             io.sockets.emit('new_post', data.post);
-            hasFormula.process(data, function (formula) {
-              console.log('This is formula: ' + formula);
-              for (var i = 0; i < formula.length; i++) {
-                socket.emit('new_post', formula[i].post);
+            getResponse.process(data, function (response) {
+              for (var i = 0; i < response.length; i++) {
+                io.sockets.emit('new_post', response[i].post);
               }
             });
           }
           else if (isQuery.include == true) { //post with answer
             console.log('I see a query include');
-            hasFormula.process(data, function (formula) {
-              io.sockets.emit('new_post', data.post);
-              for (var i = 0; i < formula.length; i++) {
-                socket.emit('new_post', formula[i].post);
-              }
+            io.sockets.emit('new_post', data.post);
+            getResponse.process(data, function (response) {
+              console.log('this is formula: ' + response);
             });
           }
         });

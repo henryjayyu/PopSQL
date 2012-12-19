@@ -10,8 +10,9 @@ var searchSchema = new Schema({
     ,	poll: Number
     ,   response: String
     ,   has_formula: { type: Boolean
-    ,	default: false}
-    ,	formula: Array
+    ,	default: false }
+    ,	formula: Schema.Types.Mixed
+    ,	expired: Date
 });
 
 module.exports = mongoose.model('search', searchSchema);

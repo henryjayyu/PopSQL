@@ -7,9 +7,6 @@ function determine_query(req, callback) {
 		str = str.replace(sval, '');
 	}
 
-	console.log('qcount: ' + qcount);
-	console.log('str: ' + str);
-
 	str = str.replace(/ /g, '');
 
 	if (str == '') {

@@ -3,7 +3,6 @@ var mongoose = require('mongoose');
 
 //Global Models
 var Post = require('../models/post.js');
-var Library = require('../models/library.js');
 var Search = require('../models/search.js');
 
 //REST Models
