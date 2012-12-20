@@ -125,7 +125,7 @@ io.sockets.on('connection', function (socket) {
             io.sockets.emit('new_post', data.post);
             getResponse.process(data, function (response) {
               for (var i = 0; i < response.length; i++) {
-                io.sockets.emit('new_post', response[i].post);
+                io.sockets.emit('new_post', response[i]);
               }
             });
           }

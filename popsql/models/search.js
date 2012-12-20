@@ -12,7 +12,8 @@ var searchSchema = new Schema({
     ,   has_formula: { type: Boolean
     ,	default: false }
     ,	formula: Schema.Types.Mixed
-    ,	expired: Date
+    ,	expires: Date
+    ,	source: Schema.Types.Mixed
 });
 
 module.exports = mongoose.model('search', searchSchema);

@@ -18,15 +18,15 @@ function indexQuery(req, i, res) { //recursive function
 				addQuery(req[i], function (newQuery) {
 					console.log('NEW query added!');
 					handleResponse(null, function (handleResponse) {
-						responses[i] = { 'formula': handleResponse['formula'], 'post': handleResponse['post'] };
+						responses[i] = handleResponse;
 						i++;
 						indexQuery(req, i, res);
 					});
 				});
 			}
-			else {
+			else { //existing query
 				handleResponse(result, function (handleResponse) {
-					responses[i] = { 'formula': handleResponse['formula'], 'post': handleResponse['post'] };
+					responses[i] = handleResponse;
 					i++;
 					indexQuery(req, i, res);
 				});
@@ -52,59 +52,96 @@ function handleResponse(req, res) {
 	console.log('handleResponse:');
 	if (req == null) { //no answer
 		noAnswer(null, function (callback) {
-			return res({
-				formula: false
-			,	post: callback
-			});
+			return res(callback);
 		});
 	}
 	else {
 		Search.update( { _id: req._id } , { $inc: { poll: 1} } ).exec(function (err, callback) {
-			if (req.has_formula == false) {
+			if (req.has_formula == false) { //no formula
 				if (req.response == undefined) { //no answer
 					console.log('no answer');
 					noAnswer(null, function (callback) {
-						return res({
-							formula: false
-						,	post: callback
-						});
+						return res(callback);
 					});
 				}
 				else { //static answer
 					console.log('static answer');
-					new Post({
+					new Post({ //post response
 						author: 'Popsql'
 					,	handle: '@popsql'
 					,	user_ip: 'host'
 					,	spriteID: '/images/host.png'
-					,	post: req.response
+					,	post: req['response']
 					}).save(function (err, callback) {
-						return res({
-							formula: false
-						,	post: callback
-						});
+						return res(callback);
 					});
 				}
 			}
-			else {
-				if (req.response == undefined) { //formula answer
+			else { //has formula
+				if (req.response == undefined) { //dynamic answer
 
 				}
-				else { //cached answer
-					if (req.expired < new Date()) { //expired answer?
-						console.log('expired formula');
-						useFormula.process({ formula: 'wunderground' , header: { host: 'api.wunderground.com', path: '/api/8bacae0472865331/' }, arg: ['conditions/', 'q/', 'ca/', 'santa_monica', '.json'] }, function (callback) {
-							console.log(callback);
+				else { //cacheable answer
+					if (req['expires'] < new Date()) { //expired answer?
+						useFormula.process(req['formula'], function (callback) {
+							updateFormula({ //updates cached answer 
+								_id: req._id
+							,	response: callback['post']
+							,	new_expires: callback['new_expires'] 
+							}, function () {
+								new Post({ //post response
+									author: req['source']['author'] 
+								,	handle: req['source']['handle'] 
+								,	user_ip: req['source']['user_ip']
+								,	spriteID: req['source']['spriteID']
+								,	post: callback['post']
+								}).save(function (err, callback) {
+									console.log(callback);
+									return res(callback);
+								});
+							});
 						});
 					}
 					else { //cached answer
-						console.log('still good!');
-						//use cached answer
+						new Post({ //post response
+							author: req['source']['author'] 
+						,	handle: req['source']['handle'] 
+						,	user_ip: req['source']['user_ip']
+						,	spriteID: req['source']['spriteID']
+						,	post: req['response']
+						}).save(function (err, callback) {
+							return res(callback);
+						});
 					}
 				}
 			}
 		});
 	}
+}
+
+function updateFormula(req, res) { //reset cached answer
+	var new_expires = {
+		h: function (req, res) {
+			var new_exp = new Date();
+			new_exp.setHours( new_exp.getHours() + req);
+			return res(new_exp);
+		},
+	};
+
+	var units = req['new_expires']['units']
+	,	value = req['new_expires']['value'];	
+
+	new_expires[units](value, function (new_expires) {
+		Search.update({ 
+			'_id': req['_id']
+		},{$set:{ 
+			'response': req['response']
+		, 	'expires': new_expires 
+		}}).exec(function (err, callback) {
+			return res(true);
+		});
+	});
+	
 }
 
 function noAnswer(req, res) { //responds no answer
