@@ -55,8 +55,8 @@ var _queries = {
 				query: query
 			}).exec(function (err, result) {
 				if (result == null) { //new query
-					_queries['add_query'](query, function (added) { //add query
-						_queries['handle_response'](null, function (response) { //get response
+					_queries['add_query'](queries[i], function (new_query) { //add query
+						_queries['handle_response'](new_query, function (response) { //get response
 							responses[i] = response; //assign response
 							i++;
 							_queries['get_index']({ queries: req['queries'], i: i }, res); //recurse
@@ -83,19 +83,18 @@ var _queries = {
 			query: req
 		,	poll: 1
 		,	has_formula: false
-		,	src: {
+		,	source: {
 				author: 'Popsql'
 			,	handle: '@popsql'
 			,	user_ip: '107.23.96.170'
 			,	spriteID: '/images/host.png'
 			}
-		}).save(function (err, search) {
-			return res(true)
+		}).save(function (err, new_query) {
+			return res(new_query)
 		});
 	}, //end
 
 	handle_response: function (req, res) {
-		console.log('handle_response: ' + req['query']);
 		if (req == null) { //new query
 			_queries['no_answer'](req, function (post) {
 				return res(post); //returns default answer -> get_index
@@ -233,7 +232,15 @@ module.exports = {
 				});
 			}
 			else { //post with appended answer
-
+				//temp solution
+				console.log('is_include: true');
+				_queries['get_response'](req, function () {
+					console.log('got_index:');
+					var posts = [];
+					posts.push(req['post']);
+					posts = posts.concat(responses); //construct flow
+					return callback(posts);
+				});
 			}
 		});
 	}

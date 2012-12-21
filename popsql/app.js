@@ -98,8 +98,6 @@ server.listen(app.get('port'), function() {
 //Websocket
 var postHandler = require('./models/postHandler.js')
 ,   queryHandler = require('./models/queryHandler.js')
-,   getResponse = require('./models/getResponse.js')
-,   useFormula = require('./models/useFormula.js')
 ,   sprites = require('./models/sprites.js')
 ,   Post = require('./models/post.js');
 
