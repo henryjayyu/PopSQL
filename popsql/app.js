@@ -103,6 +103,13 @@ var postHandler = require('./models/postHandler.js')
 ,   sprites = require('./models/sprites.js')
 ,   Post = require('./models/post.js');
 
+function new_posts(req, res) {
+  for (var i = 0; i < req.length; i++) {
+    io.sockets.emit('new_post', req[i]);
+  }
+  return res(true);
+}
+
 io.sockets.on('connection', function (socket) {
 
   users_ip = socket.handshake.address.address;
@@ -117,26 +124,13 @@ io.sockets.on('connection', function (socket) {
   socket.on('userPost', function (data) {
     //console.log("received post: " + data['content']);
     socket.emit('receipt', true); //send receipt
-    postHandler.process({ users_ip: users_ip, str: data['content'] }, function (data) {
+    postHandler['process']({ users_ip: users_ip, str: data['content'] }, function (data) {
       if (data.queries != '') { //queries
-        queryHandler.process(data, function (isQuery) {
-          if (isQuery.include == false) { //post then answer
-            console.log('I see a full query');
-            io.sockets.emit('new_post', data.post);
-            getResponse.process(data, function (response) {
-              for (var i = 0; i < response.length; i++) {
-                io.sockets.emit('new_post', response[i]);
-              }
-            });
-          }
-          else if (isQuery.include == true) { //post with answer
-            console.log('I see a query include');
-            io.sockets.emit('new_post', data.post);
-            getResponse.process(data, function (response) {
-              console.log('this is formula: ' + response);
-            });
-          }
-        });
+        queryHandler['process'](data, function (posts) {
+          new_posts(posts, function() {
+            console.log('Done!');  
+          });
+        });          
       }
       else { //no queries
         io.sockets.emit('new_post', data.post);
