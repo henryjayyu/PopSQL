@@ -51,6 +51,7 @@ var _queries = {
 		console.log('get_index:' + i);
 		if (i < req['queries'].length) {
 			query = query.toLowerCase(); //normalize to lowercase
+			query = query.trim(); //normalize to remove leading and trailing whitespace
 			Search.findOne({
 				query: query
 			}).exec(function (err, result) {
