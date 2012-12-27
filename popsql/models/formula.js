@@ -20,6 +20,35 @@ var _f = {
 			return res(callback) //returns answer -> module['use']
 		});
 	}, //end
+
+	has_key: function(req, res) {
+		req = req.replace(/\?/g, ''); //remove wrapper
+		q_parts = req.split(/ /); //split query into array of parts
+		for (var i = 0; i < q_parts.length; i++) { //identify api key
+			switch (q_parts[i]) {
+				case 'weather':
+					api_name = 'theweatherchannel'; //declare api name
+					_f['get_formulas'](api_name, function (get_formulas) { //get module require
+						get_formulas['formula'](q_parts, function (err, formula) { //get formula
+							if (err) {
+								return res(err); //returns err -> concoct
+							}
+							else {
+								return res(null, formula); //returns formula['req'] -> concoct
+							}
+						});
+					});
+					break;
+			}
+			if (i == q_parts.length) { //break
+				return res(new Error('No api_key'));
+			}
+		}
+	}, //end
+
+	get_formulas: function(req, res) {
+		return res(require('../apis/' + req + '.js'));
+	}, //end
 };
 
 /*
@@ -27,6 +56,7 @@ var _f = {
  */
 
 var http = require('http')
+,	Search = require('../models/search.js') //search schema
 ,	options = {
 		method: 'GET'
 	,	header: {
@@ -38,8 +68,9 @@ var http = require('http')
 module.exports = {
 	use: function(req, callback) {
 		api_name = req['name']; //set api name
-		console.log('api_name: ' + api_name);
+		console.log(api_name);
 		_f['recipe'](req, function() { //construct api request
+			console.log(options);
 			http.request(options, function (data) {
 				var str = ''; //data string
 				data.on('data', function (chunk) { //add chunk to data string
@@ -58,7 +89,40 @@ module.exports = {
 		});
 	}, //end
 
-	brew: function(req, callback) {
-		//
+	concoct: function(req, callback) {
+		//req = search { _id:, query:, source: {}, }
+		_f['has_key'](req['query'], function (err, res) {
+			if (err) {
+				return callback(err); // returns err -> queryHandler/handle_response
+			}
+			else { //update query source & formula
+				var formula = res['formula']
+				,	source = res['source'];
+
+				Search.update({
+					query: req['query']
+				},{	$set: {
+						has_formula: true
+					,	source: {
+							'author': source['author']
+						,	'handle': source['handle']
+						,	'user_ip': source['user_ip']
+						,	'spriteID': source['spriteID']
+						}
+					,	formula: {
+							'name': formula['name']
+						,	'host': formula['host']
+						,	'path': formula['path']
+						,	'req': formula['req']
+						,	'res': formula['res'] 
+						} 
+					}}).exec(function () { //get answer
+					module.exports['use'](res['formula'], function (data) {
+						return callback(null, data); // returns answer -> queryHandler/handle_response
+					});
+				});
+			}
+		});
+		
 	}, //end
 };

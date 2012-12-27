@@ -112,8 +112,35 @@ var _queries = {
 				if (req['has_formula'] == false) { //no formula
 					console.log('has_formula: false');
 					if (req.response == undefined) { //no static answer
-						_queries['no_answer'](req, function (post) {
-							return res(post); //returns default answer -> get_index
+						Formula['concoct'](req, function (err, data) {
+							if (err) {
+								console.log('no answer:');
+								_queries['no_answer'](req, function (post) {
+									return res(post); //returns default answer -> get_index
+								});
+							}
+							else {
+								if (data['new_expires']) {
+									console.log('data[post]: ' + data['post']);
+									_queries['update']({ //update answer
+										_id: req['_id']
+									,	response: data['post']
+									,	new_expires: data['new_expires']
+									}, function () {
+										Search.findOne({ _id: req['_id'] }).exec(function (err, updated) { //get updated search
+											new Post({
+												author: updated['source']['author']
+											,	handle: updated['source']['handle']
+											,	user_ip: updated['source']['user_ip']
+											,	spriteID: updated['source']['spriteID']
+											,	post: updated['response']
+											}).save(function (err, post) {
+												return res(post); //returns updated answer -> get_index
+											});
+										});
+									});
+								}
+							}
 						});
 					}
 					else { //static answer
@@ -141,7 +168,7 @@ var _queries = {
 								,	new_expires: callback['new_expires']
 								}, function () { //updated answer
 									new Post({
-										author : req['source']['author']
+										author: req['source']['author']
 									,	handle: req['source']['handle']
 									,	user_ip: req['source']['user_ip']
 									,	spriteID: req['source']['spriteID']
