@@ -114,7 +114,7 @@ var _queries = {
 					if (req.response == undefined) { //no static answer
 						Formula['concoct'](req, function (err, data) {
 							if (err) {
-								console.log('no answer:');
+								console.log(err);
 								_queries['no_answer'](req, function (post) {
 									return res(post); //returns default answer -> get_index
 								});
