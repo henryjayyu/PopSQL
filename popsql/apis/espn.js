@@ -40,8 +40,20 @@ var _f = {
 		if (req == 'nfl') { //nfl
 			return res(null, { resource: '/sports/football/' + req }); //returns resource -> classify
 		}
-		else if (req == 'nba') { //nfl
+		else if (req == 'nba') { //nba
 			return res(null, { resource: '/sports/basketball/' + req }); //returns resource -> classify
+		}
+		else if (req == 'wnba') { //wnba
+			return res(null, { resource: '/sports/basketball/' + req }); //returns resource -> classify
+		}
+		else if (req == 'mlb') { //mlb
+			return res(null, { resource: '/sports/baseball/' + req }); //returns resource -> classify
+		}
+		else if (req == 'nhl') { //nhl
+			return res(null, { resource: '/sports/hockey/' + req }); //returns resource -> classify
+		}
+		else if (req == 'mma') { //mma
+			return res(null, { resource: '/sports/' + req }); //returns resource -> classify
 		}
 
 		else if (req.match('headline') || req.match('news')) { //headline(s)
@@ -53,6 +65,15 @@ var _f = {
 		else {
 			return res(new Error('\"' + req + '\" has no class.'));
 		}
+	}, //end
+
+	headlines: function (req, res) {
+		var str = 'Top 5 Headlines: <ol type=\'1\'>';
+		for (var i = 0; i <  5; i++) {
+			str += '<li><a target=\'_blank\' href=\'' + req[i]['links']['web']['href'] + '\'>' + req[i]['headline'] + '</a></li>';
+		}
+		str += '</ol>'
+		return res (null, str);
 	}, //end
 }
 
@@ -95,7 +116,15 @@ module.exports = {
 				switch (cond) {
 					case 'headlines':
 						console.log('headline:');
-						answer = req['data']['headlines'][0]['headline'];
+						_f['headlines'](req['data']['headlines'], function (err, str) {
+							if (err) {
+								answer = 'err';
+							}
+							else {
+								answer = str;
+							}
+						});
+						//answer = req['data']['headlines'][0]['headline'];
 						break;
 				}
 			}

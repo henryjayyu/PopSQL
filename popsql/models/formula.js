@@ -31,11 +31,11 @@ var _f = {
 						keys.push('theweatherchannel');
 						break;
 
-					/*
-					case 'nfl': case 'nba':
+					
+					case 'nfl': case 'nba': case 'wnba': case 'mlb': case 'nhl': case 'mma':
 						keys.push('espn');
 						break;
-					*/
+					
 				}
 
 				if (i == q_parts.length - 1) {
