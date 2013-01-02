@@ -122,6 +122,9 @@ module.exports = {
 	formula: function (req, res) {
 		//req = search { query: q_parts }
 		console.log('formula:');
+		body = []
+	,	response = []; //reset
+
 		_f['classify'](0, req, function (err, callback) {
 			if (err) {
 				console.log(err);
