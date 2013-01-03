@@ -141,18 +141,13 @@ module.exports = {
 					str += chunk;
 				});
 				data.on('end', function () { //parse data
-					if (str.match(/<!DOCTYPE HTML>/)) { //escapes if not json
-						return callback(new Error('Bad request'));
-					}
-					else {
-						parsed_json = JSON.parse(str);
-						_f['blender']({
-							formula: req
-						,	data: parsed_json
-						}, function (answer) {
-							return callback(null, answer); //returns answer -> queryHandler/handle_response 
-						});
-					}
+					parsed_json = JSON.parse(str);
+					_f['blender']({
+						formula: req
+					,	data: parsed_json
+					}, function (answer) {
+						return callback(answer); //returns answer -> queryHandler/handle_response 
+					});
 				});
 			}).end(); //closes http request
 		});
@@ -194,13 +189,8 @@ module.exports = {
 								,	res: f['res'] 
 								} 
 						}}).exec(function () { //get answer
-							module.exports['use'](f, function (err, answer) {
-								if (err) {
-									return res(err);
-								}
-								else {
-									return res(null, answer); // returns answer -> queryHandler/handle_response
-								}
+							module.exports['use'](f, function (answer) {
+								return res(null, answer); // returns answer -> queryHandler/handle_response
 							});
 						});
 					}
